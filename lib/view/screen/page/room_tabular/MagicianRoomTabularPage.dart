@@ -10,8 +10,8 @@ class _MagicianRoomTabularPageState extends State<MagicianRoomTabularPage> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey.withAlpha(10),
-      child: Center(
-        child: Text("Magician Room Tabular Page"),
+      child: const Center(
+        child: const Text("Magician Room Tabular Page"),
       ),
     );
   }

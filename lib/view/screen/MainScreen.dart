@@ -25,6 +25,11 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return NavigationView(
       appBar: buildNavigationAppBar(),
@@ -43,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: Icon(FluentIcons.settings),
+                icon: const Icon(FluentIcons.settings),
                 onPressed: () {  },
               ),
             ],
@@ -52,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  NavigationBody buildNavigationBody() {
+  Widget buildNavigationBody() {
     return NavigationBody(
       index: _currentIndex,
       children: [
@@ -75,10 +80,13 @@ class _MainScreenState extends State<MainScreen> {
     return NavigationPane(
       footerItems: [
         PaneItem(
-          icon: Icon(FluentIcons.door),
-          title: Text("Exit"),
+          icon: const Icon(FluentIcons.door),
+          title: const Text("Exit"),
         )
       ],
+      size: NavigationPaneSize(
+        openMaxWidth: MediaQuery.of(context).size.width / 7,
+      ),
       selected: _currentIndex,
       displayMode: PaneDisplayMode.auto,
       onChanged: (idx){
@@ -86,49 +94,48 @@ class _MainScreenState extends State<MainScreen> {
       },
       items: [
         PaneItem(
-            icon: Icon(FluentIcons.globe),
-            title: Text("Full Overview",),
-            infoBadge: const InfoBadge(source: Text("10"))
+            icon: const Icon(FluentIcons.globe),
+            title: const Text("Full Overview",),
         ),
-        PaneItemHeader(header: Divider()),
+        PaneItemHeader(header: const Divider()),
         PaneItem(
-            icon: Icon(FluentIcons.room,),
-            title: Text("The Vault",),
-            infoBadge: const InfoBadge(source: Text("10"))
+            icon: const Icon(FluentIcons.room,),
+            title: const Text("The Vault",),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.room),
-          title: Text("Flight 729"),
+          icon: const Icon(FluentIcons.room),
+          title: const Text("Flight 729"),
+          infoBadge: const InfoBadge(source: Text("4"), color: Colors.warningPrimaryColor,)
         ),
         PaneItem(
-          icon: Icon(FluentIcons.room),
-          title: Text("Magician's Code"),
+          icon: const Icon(FluentIcons.room),
+          title: const Text("Magician's Code"),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.room),
-          title: Text("The Elevator"),
+          icon: const Icon(FluentIcons.room),
+          title: const Text("The Elevator"),
         ),
-        PaneItemHeader(header: Divider()),
+        PaneItemHeader(header: const Divider()),
         PaneItem(
-          icon: Icon(FluentIcons.trending12),
-          title: Text("Trends"),
-        ),
-        PaneItem(
-          icon: Icon(FluentIcons.warning),
-          title: Text("Alerts"),
+          icon: const Icon(FluentIcons.trending12),
+          title: const Text("Trends"),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.shared_notes),
-          title: Text("Handover Notes"),
-        ),
-        PaneItemHeader(header: Divider()),
-        PaneItem(
-          icon: Icon(FluentIcons.info12),
-          title: Text("Info Center"),
+          icon: const Icon(FluentIcons.warning),
+          title: const Text("Alerts"),
         ),
         PaneItem(
-          icon: Icon(FluentIcons.settings),
-          title: Text("Preferences"),
+          icon: const Icon(FluentIcons.shared_notes),
+          title: const Text("Handover Notes"),
+        ),
+        PaneItemHeader(header: const Divider()),
+        PaneItem(
+          icon: const Icon(FluentIcons.info12),
+          title: const Text("Info Center"),
+        ),
+        PaneItem(
+          icon: const Icon(FluentIcons.settings),
+          title: const Text("Preferences"),
         ),
       ],
     );

@@ -49,7 +49,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: IconButton(
-                            icon: Icon(FluentIcons.info, size: 25),
+                            icon: const Icon(FluentIcons.info, size: 25),
                             onPressed: () {
                             },
                           ),
@@ -59,7 +59,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                         flex: 8,
                         child: Text(
                           widget.roomName,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 50,
                           ),
                           textAlign: TextAlign.center,
@@ -70,7 +70,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 16.0),
                           child: IconButton(
-                            icon: Icon(FluentIcons.more, size: 25),
+                            icon: const Icon(FluentIcons.more, size: 25),
                             onPressed: () {
                             },
                           ),
@@ -78,8 +78,8 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
                     child: Divider(),
                   ),
                 ],
@@ -90,10 +90,10 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.only(left: 16.0),
                       child: Text(
                         "Status",
                         textAlign: TextAlign.start,
@@ -122,10 +122,10 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.only(left: 16.0),
                       child: Text(
                         "Timer",
                         textAlign: TextAlign.start,
@@ -159,10 +159,10 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.only(left: 16.0),
                       child: Text(
                         "Progress",
                         textAlign: TextAlign.start,
@@ -181,9 +181,9 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                       activeColor: Colors.blue,
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 3,
-                    child: Text(
+                    child: const Text(
                       "55%",
                       textAlign: TextAlign.center,
                     ),
@@ -196,10 +196,10 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.only(left: 16.0),
                       child: Text(
                         "Audio",
                         textAlign: TextAlign.start,
@@ -228,10 +228,10 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: EdgeInsets.only(left: 16.0),
                       child: Text(
                         "Video",
                         textAlign: TextAlign.start,
@@ -242,7 +242,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                       ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 16,
                     child: Text(
                       "Standby",
@@ -255,8 +255,8 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24.0),
               child: Divider(),
             ),
             Padding(
@@ -270,16 +270,16 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                           context: context,
                           builder: (context){
                             return ContentDialog(
-                              title: Text("Game Control"),
-                              content: Text("This is a placeholder and will be replaced once functionality for game control is implemented."),
+                              title: const Text("Game Control"),
+                              content: const Text("This is a placeholder and will be replaced once functionality for game control is implemented."),
                               actions: [
-                                Button(child: Text("OK"), onPressed: (){Navigator.pop(context);}),
+                                Button(child: const Text("OK"), onPressed: (){Navigator.pop(context);}),
                               ],
                             );
                           },
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         "Game Control",
                         style: TextStyle(
                           fontSize: 16,
@@ -287,7 +287,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                       ),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
@@ -295,16 +295,16 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                           context: context,
                           builder: (context){
                             return ContentDialog(
-                              title: Text("Hint Control"),
-                              content: Text("This is a placeholder and will be replaced once functionality for hint system is implemented."),
+                              title: const Text("Hint Control"),
+                              content: const Text("This is a placeholder and will be replaced once functionality for hint system is implemented."),
                               actions: [
-                                Button(child: Text("OK"), onPressed: (){Navigator.pop(context);}),
+                                Button(child: const Text("OK"), onPressed: (){Navigator.pop(context);}),
                               ],
                             );
                           },
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         "Hint Control",
                         style: TextStyle(
                           fontSize: 16,
@@ -326,16 +326,16 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                           context: context,
                           builder: (context){
                             return ContentDialog(
-                              title: Text("Bypass Control"),
-                              content: Text("This is a placeholder and will be replaced once functionality for bypass functionality is implemented."),
+                              title: const Text("Bypass Control"),
+                              content: const Text("This is a placeholder and will be replaced once functionality for bypass functionality is implemented."),
                               actions: [
-                                Button(child: Text("OK"), onPressed: (){Navigator.pop(context);}),
+                                Button(child: const Text("OK"), onPressed: (){Navigator.pop(context);}),
                               ],
                             );
                           },
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         "Bypass Control",
                         style: TextStyle(
                           fontSize: 16,
@@ -343,7 +343,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                       ),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
@@ -351,18 +351,18 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                           context: context,
                           builder: (context){
                             return ContentDialog(
-                              title: Text("Timer Control"),
-                              content: Text("This is a placeholder and will be replaced once functionality for timer control is implemented."),
+                              title: const Text("Timer Control"),
+                              content: const Text("This is a placeholder and will be replaced once functionality for timer control is implemented."),
                               actions: [
-                                Button(child: Text("OK"), onPressed: (){Navigator.pop(context);}),
+                                Button(child: const Text("OK"), onPressed: (){Navigator.pop(context);}),
                               ],
                             );
                           },
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         "Timer Control",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                         ),
                       ),
@@ -371,7 +371,7 @@ class _RoomTabularSummaryCardState extends State<RoomTabularSummaryCard> {
                 ],
               ),
             ),
-            SizedBox(height: 20,)
+            const SizedBox(height: 20,)
           ],
         )
       ),

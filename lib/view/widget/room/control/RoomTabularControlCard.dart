@@ -21,9 +21,9 @@ class _RoomTabularControlCardState extends State<RoomTabularControlCard> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Container(
-              child: Text(
+              child: const Text(
                 "Control Log",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -32,6 +32,10 @@ class _RoomTabularControlCardState extends State<RoomTabularControlCard> {
                 ),
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            child: Divider(),
           ),
           Expanded(child: ActionsDataTable()),
         ],

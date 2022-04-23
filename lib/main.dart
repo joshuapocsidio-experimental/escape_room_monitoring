@@ -34,7 +34,7 @@ class WinApp extends StatelessWidget {
         inactiveColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         navigationPaneTheme: NavigationPaneThemeData(
-          animationDuration: Duration(milliseconds: 100),
+          animationDuration: const Duration(milliseconds: 100),
           highlightColor: Colors.orange.resolveFromReverseBrightness(
             Brightness.light,
             level: Brightness.light.isDark ? 2 : 0,
@@ -45,26 +45,26 @@ class WinApp extends StatelessWidget {
           unselectedIconColor: ButtonState.all(
             Colors.black,
           ),
-          iconPadding: EdgeInsets.all(8),
+          iconPadding: const EdgeInsets.all(8),
           selectedTextStyle: ButtonState.all(
-            TextStyle(
+            const TextStyle(
               fontSize: 20,
               color: Colors.black
             ),
           ),
           unselectedTextStyle: ButtonState.all(
-            TextStyle(
+            const TextStyle(
               fontSize: 15,
               color: Colors.black,
             ),
           ),
-          itemHeaderTextStyle: TextStyle(
+          itemHeaderTextStyle: const TextStyle(
             fontSize: 30,
             color: Colors.black,
           )
         ),
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }

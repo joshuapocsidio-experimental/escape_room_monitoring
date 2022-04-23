@@ -17,17 +17,17 @@ class _OverviewPageState extends State<OverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Color.fromARGB(100, 147, 147, 147),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: GridView.count(
-            crossAxisCount: 2,
-            children: overviewCards,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 2540/1440,
-          ),
+      color: const Color.fromARGB(100, 147, 147, 147),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: GridView.count(
+          crossAxisCount: 2,
+          children: overviewCards,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 2540/1440,
         ),
-      );
+      ),
+    );
   }
 }

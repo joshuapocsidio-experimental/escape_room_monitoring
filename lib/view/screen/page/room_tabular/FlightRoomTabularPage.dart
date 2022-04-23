@@ -21,7 +21,7 @@ class _FlightRoomTabularPageState extends State<FlightRoomTabularPage> {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 9,
             child: Column(
               children: [
                 Container(
@@ -53,7 +53,7 @@ class _FlightRoomTabularPageState extends State<FlightRoomTabularPage> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 10,
             child: Padding(
               padding: const EdgeInsets.only(left: 4, top: 8, bottom: 8, right: 8),
               child: GameStateCard(),

@@ -7,8 +7,6 @@ class RoomTabularAlarmCard extends StatefulWidget {
 }
 
 class _RoomTabularAlarmCardState extends State<RoomTabularAlarmCard> {
-
-
   @override
   Widget build(BuildContext context) {
     return Acrylic(
@@ -22,17 +20,21 @@ class _RoomTabularAlarmCardState extends State<RoomTabularAlarmCard> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Container(
-              child: Text(
+              child: const Text(
                 "Alerts Log",
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+            child: Divider(),
           ),
           Expanded(child: AlarmDataTable()),
         ],
