@@ -7,7 +7,7 @@ class OverviewPage extends StatefulWidget {
 }
 
 class _OverviewPageState extends State<OverviewPage> {
-  List<Widget> cards = [
+  List<Widget> overviewCards = [
     RoomOverviewCard(roomName: "The Vault"),
     RoomOverviewCard(roomName: "Flight 729"),
     RoomOverviewCard(roomName: "Magician's Code"),
@@ -22,7 +22,7 @@ class _OverviewPageState extends State<OverviewPage> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: GridView.count(
             crossAxisCount: 2,
-            children: cards,
+            children: overviewCards,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             childAspectRatio: 2540/1440,

@@ -113,6 +113,10 @@ class _AlarmDataTableState extends State<AlarmDataTable> {
   @override
   Widget build(BuildContext context) {
     return DataTable2(
+      headingTextStyle: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
       dataTextStyle: TextStyle(
         fontSize: 13,
         color: Colors.black,
@@ -126,7 +130,7 @@ class _AlarmDataTableState extends State<AlarmDataTable> {
       showCheckboxColumn: true,
       headingRowColor: MaterialStateColor.resolveWith(
         (states) {
-          return Color.alphaBlend(Colors.grey.withAlpha(80), Colors.white);
+          return Color.alphaBlend(Colors.transparent, Colors.transparent);
         }
       ),
       lmRatio: 1.7,

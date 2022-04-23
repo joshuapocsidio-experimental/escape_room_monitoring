@@ -4,18 +4,30 @@ enum RoomState{
   Resetting,
   RequireReset,
   Finished,
+  Disconnected,
 }
 
 class RoomStateData{
   final String name;
   final String id;
+  final String ip;
 
   late RoomState state;
   late String stateText;
-  late String timer;
+  late String maxTime;
+  late String remTime;
+  late String curTime;
   late int progress;
 
-  RoomStateData({required this.name, required this.id, required this.state, required this.timer, required this.progress}) {
+  RoomStateData({required this.name, required this.id, required this.ip, required this.maxTime}) {
+    this.state = RoomState.Disconnected;
+    this.stateText = "Disconnected";
+    this.remTime = maxTime;
+    this.curTime = '00:00';
+    this.progress = 0;
+  }
+
+  void checkState() {
     switch(state){
       case RoomState.Ongoing:
         this.stateText = "Ongoing";
@@ -31,6 +43,9 @@ class RoomStateData{
         break;
       case RoomState.Finished:
         this.stateText = "Finished";
+        break;
+      case RoomState.Disconnected:
+        this.stateText = "Disconnected";
         break;
     }
   }

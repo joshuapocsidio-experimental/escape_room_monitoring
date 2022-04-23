@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/view/widget/AlarmDataTable.dart';
+import 'AlarmDataTable.dart';
 
 class RoomTabularAlarmCard extends StatefulWidget {
   @override
@@ -23,21 +23,16 @@ class _RoomTabularAlarmCardState extends State<RoomTabularAlarmCard> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Divider(),
-          ),
-          Container(
-            child: Text(
-              "Alerts Log",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            child: Container(
+              child: Text(
+                "Alerts Log",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Divider(),
           ),
           Expanded(child: AlarmDataTable()),
         ],

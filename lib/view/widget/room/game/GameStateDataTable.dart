@@ -21,7 +21,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Introduction Video"),
           ),
           DataCell(
-            Text("Completed"),
+            Text("Completed", style: TextStyle(color: Colors.green),),
           ),
         ]
     ),
@@ -37,7 +37,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Hidden Key to be obtained via magnetic dog tag"),
           ),
           DataCell(
-            Text("Completed"),
+            Text("Not Monitored", style: TextStyle(color: Colors.grey),),
           ),
         ]
     ),
@@ -53,7 +53,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Solved by entering numeric code obtained via hints along the gun props."),
           ),
           DataCell(
-            Text("Completed"),
+            Text("Not Monitored", style: TextStyle(color: Colors.grey),),
           ),
         ]
     ),
@@ -69,7 +69,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Solved by sliding notches to correct positions obtained via manual override sheet."),
           ),
           DataCell(
-            Text("Not Attempted"),
+            Text("Completed", style: TextStyle(color: Colors.green),),
           ),
         ]
     ),
@@ -85,7 +85,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Solved by twisting rotary switches to correct positions."),
           ),
           DataCell(
-            Text("Not Attempted"),
+            Text("Completed", style: TextStyle(color: Colors.green),),
           ),
         ]
     ),
@@ -101,7 +101,23 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Solved via entering numeric codes obtained via manual override sheet and map coordinates."),
           ),
           DataCell(
-            Text("Not Attempted"),
+            Text("Completed", style: TextStyle(color: Colors.green),),
+          ),
+        ]
+    ),
+    DataRow2(
+        cells: [
+          DataCell(
+            Text("7"),
+          ),
+          DataCell(
+            Text("Infrared Frame Clue"),
+          ),
+          DataCell(
+            Text("Obtain clue via usage of Infrared Camera pointed at picture frame."),
+          ),
+          DataCell(
+            Text("Not Monitored", style: TextStyle(color: Colors.grey),),
           ),
         ]
     ),
@@ -117,7 +133,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Solved by inputting 'chubby' as password to the login screen."),
           ),
           DataCell(
-            Text("Not Attempted"),
+            Text("Completed", style: TextStyle(color: Colors.green),),
           ),
         ]
     ),
@@ -133,7 +149,23 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Solved by pushing down correct test tubes to corresponding slots."),
           ),
           DataCell(
-            Text("Not Attempted"),
+            Text("Not Attempted", style: TextStyle(color: Colors.black),),
+          ),
+        ]
+    ),
+    DataRow2(
+        cells: [
+          DataCell(
+            Text("10"),
+          ),
+          DataCell(
+            Text("Bravo Lock"),
+          ),
+          DataCell(
+            Text("Solved by inputting BRAVO to the lock."),
+          ),
+          DataCell(
+            Text("Not Monitored", style: TextStyle(color: Colors.grey),),
           ),
         ]
     ),
@@ -149,7 +181,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
             Text("Activated by pulling down lever."),
           ),
           DataCell(
-            Text("Not Attempted"),
+            Text("Not Attempted", style: TextStyle(color: Colors.black),),
           ),
         ]
     ),
@@ -178,6 +210,10 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
   @override
   Widget build(BuildContext context) {
     return DataTable2(
+      headingTextStyle: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
       dataTextStyle: TextStyle(
         fontSize: 13,
         color: Colors.black,
@@ -191,7 +227,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
       showCheckboxColumn: true,
       headingRowColor: MaterialStateColor.resolveWith(
               (states) {
-            return Color.alphaBlend(Colors.grey.withAlpha(80), Colors.white);
+            return Color.alphaBlend(Colors.transparent, Colors.transparent);
           }
       ),
       lmRatio: 5,

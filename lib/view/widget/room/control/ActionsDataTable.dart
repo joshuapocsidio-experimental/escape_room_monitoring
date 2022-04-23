@@ -226,6 +226,10 @@ class _ActionsDataTableState extends State<ActionsDataTable> {
   @override
   Widget build(BuildContext context) {
     return DataTable2(
+      headingTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
       dataTextStyle: TextStyle(
         fontSize: 13,
         color: Colors.black,
@@ -237,10 +241,9 @@ class _ActionsDataTableState extends State<ActionsDataTable> {
       columns: _cols,
       rows: _rows,
       showCheckboxColumn: true,
-      headingRowColor: MaterialStateColor.resolveWith(
-              (states) {
-            return Color.alphaBlend(Colors.grey.withAlpha(80), Colors.white);
-          }
+      headingRowColor: MaterialStateColor.resolveWith((states) {
+          return Color.alphaBlend(Colors.transparent, Colors.transparent);
+        },
       ),
       lmRatio: 4,
       smRatio: 0.7,

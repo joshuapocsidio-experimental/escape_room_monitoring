@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   fluent_ui: ^3.10.2
   data_table_2: ^2.2.1
+  csv: ^5.0.1
+  provider: ^6.0.2
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +62,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - resources/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
