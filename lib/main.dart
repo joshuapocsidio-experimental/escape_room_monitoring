@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_windows/handlers/io.dart';
 import 'package:flutter_windows/view/screen/MainScreen.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'handlers/RoomStateHandler.dart';
 
 void main() async {
-//  print(await ExtractRoomInfo("flrm01"));
   Map<String, String> roomInfoMap = await ExtractRoomInfo("flrm01");
   RoomStateHandler roomStateHandler = RoomStateHandler();
   roomStateHandler.parseRoom(roomInfoMap);

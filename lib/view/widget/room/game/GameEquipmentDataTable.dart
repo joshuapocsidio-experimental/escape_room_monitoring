@@ -15,7 +15,7 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
 
   List<EquipmentStateData> _equipmentStateData = [
     EquipmentStateData(equipReference: 'A', name: 'Intro Pushbutton', description: 'Plays the introduction video', state: EquipmentState.OFF, onText: 'Pressed', offText: 'Not Pressed', reference: '01'),
-    EquipmentStateData(equipReference: 'B', name: 'Multi-Notch Controller', description: 'Activates manual override', state: EquipmentState.ON, onText: 'Activated', offText: 'Deactivated', reference: '03'),
+    EquipmentStateData(equipReference: 'B', name: 'Multi-Notch Controller', description: 'Activates manual override', state: EquipmentState.ON, onText: 'Activated', offText: 'Deactivated', reference: '04'),
     EquipmentStateData(equipReference: 'C', name: 'Multiple Rotary Switches', description: 'Activates system override', state: EquipmentState.ON, onText: 'Activated', offText: 'Deactivated', reference: '05'),
     EquipmentStateData(equipReference: 'D', name: 'Keypad Electromagnet', description: 'Holds the keypad door closed', state: EquipmentState.OFF, onText: 'Activated', offText: 'Deactivated', reference: '05'),
     EquipmentStateData(equipReference: 'E', name: 'Overhead Cabinet Electromagnet', description: 'Holds the overhead cabinet door closed', state: EquipmentState.ON, onText: 'Disengaged', offText: 'Engaged', reference: '06'),
@@ -23,10 +23,10 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
     EquipmentStateData(equipReference: 'G', name: 'Test Tube Hydraulic', description: 'Lowers the test tube table', state: EquipmentState.OFF, onText: 'Activated', offText: 'Deactivated', reference: '09'),
     EquipmentStateData(equipReference: 'H', name: 'Test Tube Limit Switch A', description: 'Detects if test tube table has been lowered', state: EquipmentState.FAULT, onText: 'Activated', offText: 'Deactivated', reference: '09'),
     EquipmentStateData(equipReference: 'I', name: 'Test Tube Limit Switch B', description: 'Detects if test tube table has reached its physical limit', state: EquipmentState.FAULT, onText: 'Activated', offText: 'Deactivated', reference: '09'),
-    EquipmentStateData(equipReference: 'J', name: 'Antidote Electromagnet', description: 'Holds the antidote enclosure door closed', state: EquipmentState.OFF, onText: 'Disengaged', offText: 'Engaged', reference: '09'),
-    EquipmentStateData(equipReference: 'K', name: 'Lever Door Electromagnet', description: 'Holds the lever enclosure door closed', state: EquipmentState.OFF, onText: 'Disengaged', offText: 'Engaged', reference: '09'),
-    EquipmentStateData(equipReference: 'L', name: 'Antidote Door Sensor', description: 'Detects if antidote door is open or closed', state: EquipmentState.OFF, onText: 'Open', offText: 'Closed', reference: '09'),
-    EquipmentStateData(equipReference: 'M', name: 'Lever Door Sensor', description: 'Detects if lever door is open or closed', state: EquipmentState.OFF, onText: 'Open', offText: 'Closed', reference: '09'),
+    EquipmentStateData(equipReference: 'J', name: 'Antidote Electromagnet', description: 'Holds the antidote enclosure door closed', state: EquipmentState.ON, onText: 'Disengaged', offText: 'Engaged', reference: '09'),
+    EquipmentStateData(equipReference: 'K', name: 'Lever Door Electromagnet', description: 'Holds the lever enclosure door closed', state: EquipmentState.ON, onText: 'Disengaged', offText: 'Engaged', reference: '09'),
+    EquipmentStateData(equipReference: 'L', name: 'Antidote Door Sensor', description: 'Detects if antidote door is open or closed', state: EquipmentState.ON, onText: 'Open', offText: 'Closed', reference: '09'),
+    EquipmentStateData(equipReference: 'M', name: 'Lever Door Sensor', description: 'Detects if lever door is open or closed', state: EquipmentState.ON, onText: 'Open', offText: 'Closed', reference: '09'),
     EquipmentStateData(equipReference: 'N', name: 'Emergency Lever', description: 'Activates emergency state', state: EquipmentState.OFF, onText: 'Activated', offText: 'Deactivated', reference: '11'),
     EquipmentStateData(equipReference: 'O', name: 'Exit Door Electromagnet', description: 'Holds the entry/exit door closed', state: EquipmentState.OFF, onText: 'Disengaged', offText: 'Engaged', reference: '11'),
     EquipmentStateData(equipReference: 'P', name: 'Exit Door Sensor', description: 'Detects if entry/exit door is closed', state: EquipmentState.OFF, onText: 'Disengaged', offText: 'Engaged', reference: '11'),
