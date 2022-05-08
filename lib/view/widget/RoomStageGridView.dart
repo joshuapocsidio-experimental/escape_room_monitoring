@@ -12,6 +12,7 @@ class RoomStageGridView extends StatefulWidget {
 }
 
 class _RoomStageGridViewState extends State<RoomStageGridView> {
+  final ScrollController _verticalScrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class _RoomStageGridViewState extends State<RoomStageGridView> {
       children: [
         Expanded(
           child: GridView.count(
+            controller: _verticalScrollController,
             crossAxisCount: widget.numColumns,
             mainAxisSpacing: 3,
             crossAxisSpacing: 3,

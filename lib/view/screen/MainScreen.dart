@@ -77,7 +77,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   NavigationPane buildNavigationPane() {
+    final ScrollController _verticalScrollController = ScrollController();
+
     return NavigationPane(
+      scrollController: _verticalScrollController,
       footerItems: [
         PaneItem(
           icon: const Icon(FluentIcons.door),

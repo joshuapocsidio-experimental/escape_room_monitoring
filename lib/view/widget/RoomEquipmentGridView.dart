@@ -12,13 +12,20 @@ class RoomEquipmentGridView extends StatefulWidget {
 }
 
 class _RoomEquipmentGridViewState extends State<RoomEquipmentGridView> {
-
+//  final ScrollController _verticalScrollController = ScrollController();
+  late ScrollController _scrollController;
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: GridView.count(
+            controller: _scrollController,
             crossAxisCount: widget.numColumns,
             mainAxisSpacing: 3,
             crossAxisSpacing: 3,

@@ -12,6 +12,8 @@ class GameEquipmentDataTable extends StatefulWidget {
 
 class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
   late EquipmentStateDataSource _equipmentStateDataSource;
+//  final ScrollController _verticalScrollController = ScrollController();
+  late ScrollController _scrollController;
 
   List<EquipmentStateData> _equipmentStateData = [
     EquipmentStateData(equipReference: 'A', name: 'Intro Pushbutton', description: 'Plays the introduction video', state: EquipmentState.OFF, onText: 'Pressed', offText: 'Not Pressed', reference: '01'),
@@ -35,6 +37,7 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
   @override
   void initState() {
     _equipmentStateDataSource = EquipmentStateDataSource(equipmentStates: _equipmentStateData);
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -49,6 +52,7 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
       ),
       child: SfDataGrid(
         headerGridLinesVisibility: GridLinesVisibility.horizontal,
+        verticalScrollController: _scrollController,
         headerRowHeight: 30,
         allowSorting: true,
         source: _equipmentStateDataSource,

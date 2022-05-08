@@ -12,6 +12,8 @@ class GameStateDataTable extends StatefulWidget {
 
 class _GameStateDataTableState extends State<GameStateDataTable> {
   late PuzzleStateDataSource _puzzleStateDataSource;
+//  final ScrollController _verticalScrollController = ScrollController();
+  late ScrollController _scrollController;
 
   List<PuzzleStateData> _puzzleStateData = [
     PuzzleStateData(reference: '01', name: 'Intro', description: 'Introduction Video', state: PuzzleState.Completed),
@@ -31,6 +33,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
   @override
   void initState() {
     _puzzleStateDataSource = PuzzleStateDataSource(puzzleStates: _puzzleStateData);
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -45,6 +48,7 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
       ),
       child: SfDataGrid(
         headerGridLinesVisibility: GridLinesVisibility.horizontal,
+        verticalScrollController: _scrollController,
         headerRowHeight: 30,
         allowSorting: true,
         source: _puzzleStateDataSource,

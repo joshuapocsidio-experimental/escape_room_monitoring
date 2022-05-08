@@ -13,6 +13,8 @@ class AlarmDataTable extends StatefulWidget {
 
 class _AlarmDataTableState extends State<AlarmDataTable> {
   late AlertDataSource _alertDataSource;
+//  final ScrollController _verticalScrollController = ScrollController();
+  late ScrollController _scrollController;
 
   List<AlertData> _alertData = [
     AlertData(time: "11:38", type: AlertType.Warning, title: "Keypad Door Error", description: "System Override has not been solved but the door is open", reference: "2"),
@@ -27,6 +29,7 @@ class _AlarmDataTableState extends State<AlarmDataTable> {
   @override
   void initState() {
     _alertDataSource = AlertDataSource(alerts: _alertData);
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -41,6 +44,7 @@ class _AlarmDataTableState extends State<AlarmDataTable> {
       ),
       child: SfDataGrid(
         headerGridLinesVisibility: GridLinesVisibility.horizontal,
+        verticalScrollController: _scrollController,
         headerRowHeight: 30,
         source: _alertDataSource,
         allowSorting: true,

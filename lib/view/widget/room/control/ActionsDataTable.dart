@@ -1,4 +1,3 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_windows/model/ActionData.dart';
@@ -12,9 +11,13 @@ class ActionsDataTable extends StatefulWidget {
 
 class _ActionsDataTableState extends State<ActionsDataTable> {
   late ActionDataSource _actionDataSource;
+//  final ScrollController _verticalScrollController = ScrollController();
+  late ScrollController _scrollController;
+
   @override
   void initState() {
     _actionDataSource = ActionDataSource(actions: _actionData);
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -39,6 +42,7 @@ class _ActionsDataTableState extends State<ActionsDataTable> {
       ),
       child: SfDataGrid(
         headerGridLinesVisibility: GridLinesVisibility.horizontal,
+        verticalScrollController: _scrollController,
         headerRowHeight: 30,
         allowSorting: true,
         source: _actionDataSource,
