@@ -54,36 +54,6 @@ void main() async {
     // Add room data handler to master
     master.addDataHandler(id, dataHandler);
   }
-//
-//  // Initialize Handlers
-//  ActionDataHandler actionDataHandler = ActionDataHandler();
-//  AlertDataHandler alertDataHandler = AlertDataHandler();
-//  EquipmentDataHandler equipmentDataHandler = EquipmentDataHandler();
-//  PuzzleDataHandler puzzleDataHandler = PuzzleDataHandler();
-//  RoomDataHandler roomDataHandler = RoomDataHandler();
-//
-//  // Extract Room Information
-//  Map<String, String> vaultRoomInfo = await ExtractRoomInfo("tvrm01");
-//  Map<String, String> flightRoomInfo = await ExtractRoomInfo("flrm01");
-//  Map<String, String> magicianRoomInfo = await ExtractRoomInfo("mcrm01");
-//  Map<String, String> elevatorRoomInfo = await ExtractRoomInfo("term01");
-//  // Extract Equipment Data List
-//  List<List<String>> flightEquipmentDataList = await ExtractEquipmentDataList("flrm01");
-//  // Extract Puzzle Data List
-//  List<List<String>> flightPuzzleDataList = await ExtractPuzzleDataList("flrm01");
-//
-//  // Parse and Add Room Information
-//  roomDataHandler.addRoom(vaultRoomInfo);
-//  roomDataHandler.addRoom(flightRoomInfo);
-//  roomDataHandler.addRoom(magicianRoomInfo);
-//  roomDataHandler.addRoom(elevatorRoomInfo);
-//
-//  // Parse and Add Equipment Data List
-//  equipmentDataHandler.addEquipment("flrm01", flightEquipmentDataList);
-//
-//  // Parse and Add PuzzleData List
-//  puzzleDataHandler.addPuzzle("flrm01", flightPuzzleDataList);
-
   runApp(
     MultiProvider(
       providers: [

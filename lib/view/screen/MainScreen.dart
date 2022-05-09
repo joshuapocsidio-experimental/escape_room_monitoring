@@ -23,7 +23,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 2;
-  late SliverGridDelegateWithMaxCrossAxisExtent _gridDelegate;
   late ScrollController _scrollController;
 
   void _onNavigation(int index){
@@ -84,16 +83,16 @@ class _MainScreenState extends State<MainScreen> {
       index: _currentIndex,
       children: [
         OverviewPage(),
-        VaultRoomTabularPage(roomID: vaultRoomData.id, roomName: vaultRoomData.name, maxTime: vaultRoomData.maxTime),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
         FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime),
-        MagicianRoomTabularPage(roomID: magicianRoomData.id, roomName: magicianRoomData.name, maxTime: magicianRoomData.maxTime),
-        ElevatorRoomTabularPage(roomID: elevatorRoomData.id, roomName: elevatorRoomData.name, maxTime: elevatorRoomData.maxTime),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
+        InvalidRoomTabularPage(roomName: "Magician's Code Escape Room"),
+        InvalidRoomTabularPage(roomName: "The Elevator Escape Room"),
+        InvalidRoomTabularPage(roomName: "Placeholder"),
+        InvalidRoomTabularPage(roomName: "Placeholder"),
+        InvalidRoomTabularPage(roomName: "Placeholder"),
+        InvalidRoomTabularPage(roomName: "Placeholder"),
+        InvalidRoomTabularPage(roomName: "Placeholder"),
+        InvalidRoomTabularPage(roomName: "Placeholder"),
       ],
     );
   }
