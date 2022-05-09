@@ -9,7 +9,7 @@ enum EquipmentState {
 
 final Map<String, Color> _statusColorMap = {};
 
-class EquipmentStateData{
+class EquipmentData{
   final String reference;
   final String equipReference;
   final String name;
@@ -22,7 +22,7 @@ class EquipmentStateData{
   late String stateText;
 
 
-  EquipmentStateData({required this.equipReference, required this.name, required this.description, required this.state, required this.reference, required this.onText, required this.offText}) {
+  EquipmentData({required this.equipReference, required this.name, required this.description, required this.state, required this.reference, required this.onText, required this.offText}) {
     _statusColorMap[onText] = Colors.blue;
     _statusColorMap[offText] = Colors.black;
     _statusColorMap["Fault"] = Colors.red;
@@ -43,11 +43,11 @@ class EquipmentStateData{
 }
 
 
-class EquipmentStateDataSource extends DataGridSource {
+class EquipmentDataSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
 
-  EquipmentStateDataSource({required List<EquipmentStateData> equipmentStates}) {
+  EquipmentDataSource({required List<EquipmentData> equipmentStates}) {
     dataGridRows = equipmentStates
         .map<DataGridRow>((dataGridRow) =>
         DataGridRow(cells: [

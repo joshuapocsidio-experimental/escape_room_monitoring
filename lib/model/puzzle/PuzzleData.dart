@@ -19,7 +19,7 @@ final Map<String, Color> _statusColorMap = {
   "Bypassed" : Colors.teal,
 };
 
-class PuzzleStateData{
+class PuzzleData{
   final String reference;
   final String name;
   final String description;
@@ -27,7 +27,7 @@ class PuzzleStateData{
 
   late String stateText;
 
-  PuzzleStateData({required this.reference, required this.name, required this.description, required this.state}) {
+  PuzzleData({required this.reference, required this.name, required this.description, required this.state}) {
     switch(this.state){
       case PuzzleState.Completed:
         this.stateText = "Completed";
@@ -54,11 +54,11 @@ class PuzzleStateData{
 }
 
 
-class PuzzleStateDataSource extends DataGridSource {
+class PuzzleDataSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
 
-  PuzzleStateDataSource({required List<PuzzleStateData> puzzleStates}) {
+  PuzzleDataSource({required List<PuzzleData> puzzleStates}) {
     dataGridRows = puzzleStates
         .map<DataGridRow>((dataGridRow) =>
         DataGridRow(cells: [

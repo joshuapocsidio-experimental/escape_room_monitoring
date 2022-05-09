@@ -1,10 +1,18 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/ElevatorRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/FlightRoomTabularPage.dart';
+import 'package:flutter_windows/view/screen/page/room_tabular/InvalidRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/MagicianRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/VaultRoomTabularPage.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/DataMaster.dart';
+import '../../model/equipment/EquipmentData.dart';
+import '../../model/room/RoomData.dart';
+import '../../model/room/RoomDataHandler.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -31,10 +39,22 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    DataMaster master = Provider.of<DataMaster>(context);
+
+    RoomData vaultRoomData = master.getDataHandler("tvrm01").roomDataHandler.getRoom();
+    RoomData flightRoomData = master.getDataHandler("flrm01").roomDataHandler.getRoom();
+    RoomData magicianRoomData = master.getDataHandler("mcrm01").roomDataHandler.getRoom();
+    RoomData elevatorRoomData = master.getDataHandler("term01").roomDataHandler.getRoom();
+
     return NavigationView(
       appBar: buildNavigationAppBar(),
       pane: buildNavigationPane(),
-      content: buildNavigationBody(),
+      content: buildNavigationBody(
+        vaultRoomData: vaultRoomData,
+        flightRoomData: flightRoomData,
+        magicianRoomData: magicianRoomData,
+        elevatorRoomData: elevatorRoomData,
+      ),
     );
   }
 
@@ -57,21 +77,23 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget buildNavigationBody() {
+  Widget buildNavigationBody({required RoomData vaultRoomData, required RoomData flightRoomData, required RoomData magicianRoomData, required RoomData elevatorRoomData}) {
     return NavigationBody(
+      animationDuration: Duration(milliseconds: 250),
+      animationCurve: Curves.easeInOut,
       index: _currentIndex,
       children: [
         OverviewPage(),
-        VaultRoomTabularPage(),
-        FlightRoomTabularPage(),
-        MagicianRoomTabularPage(),
-        ElevatorRoomTabularPage(),
-        ElevatorRoomTabularPage(),
-        ElevatorRoomTabularPage(),
-        ElevatorRoomTabularPage(),
-        ElevatorRoomTabularPage(),
-        ElevatorRoomTabularPage(),
-        ElevatorRoomTabularPage(),
+        VaultRoomTabularPage(roomID: vaultRoomData.id, roomName: vaultRoomData.name, maxTime: vaultRoomData.maxTime),
+        FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime),
+        MagicianRoomTabularPage(roomID: magicianRoomData.id, roomName: magicianRoomData.name, maxTime: magicianRoomData.maxTime),
+        ElevatorRoomTabularPage(roomID: elevatorRoomData.id, roomName: elevatorRoomData.name, maxTime: elevatorRoomData.maxTime),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
+        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
       ],
     );
   }

@@ -1,9 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_windows/handlers/RoomStateHandler.dart';
+import '../../../../model/room/RoomDataHandler.dart';
 import 'package:flutter_windows/view/screen/MainScreen.dart';
 import 'package:provider/provider.dart';
-import '../../../../model/RoomStateData.dart';
+import '../../../../model/room/RoomData.dart';
 import '../control/ActionsDataTable.dart';
 
 class RoomTabularSummaryCard extends StatefulWidget {

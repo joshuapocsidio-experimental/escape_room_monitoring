@@ -1,7 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_windows/model/ActionData.dart';
-import 'package:flutter_windows/model/AlertData.dart';
+import '../../../../model/action/ActionData.dart';
+import '../../../../model/alert/AlertData.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';

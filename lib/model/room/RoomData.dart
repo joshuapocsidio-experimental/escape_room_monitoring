@@ -10,7 +10,7 @@ enum RoomState{
   Disconnected,
 }
 
-class RoomStateData{
+class RoomData{
   final String name;
   final String id;
   final String ip;
@@ -22,7 +22,7 @@ class RoomStateData{
   late String curTime;
   late int progress;
 
-  RoomStateData({required this.name, required this.id, required this.ip, required this.maxTime}) {
+  RoomData({required this.name, required this.id, required this.ip, required this.maxTime}) {
     this.state = RoomState.Disconnected;
     this.stateText = "Disconnected";
     this.remTime = maxTime;
