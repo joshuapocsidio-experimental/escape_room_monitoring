@@ -20,11 +20,14 @@ class DataMaster with ChangeNotifier{
   }
 
   DataHandler getDataHandler(String id){
-    print("DEBUG ID: " + id);
     if(_dataHandlerMap.containsKey(id) == false) {
       print("Handler does not exist."); // TODO: Throw Exception
     }
 
     return _dataHandlerMap[id]!;
+  }
+
+  List<DataHandler> getDataHandlerList(){
+    return List.unmodifiable(_dataHandlerList);
   }
 }

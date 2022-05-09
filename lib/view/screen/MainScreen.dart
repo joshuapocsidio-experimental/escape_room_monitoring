@@ -1,18 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/ElevatorRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/FlightRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/InvalidRoomTabularPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/MagicianRoomTabularPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/VaultRoomTabularPage.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/DataMaster.dart';
-import '../../model/equipment/EquipmentData.dart';
 import '../../model/room/RoomData.dart';
-import '../../model/room/RoomDataHandler.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

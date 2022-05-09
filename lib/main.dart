@@ -7,6 +7,7 @@ import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
 import 'package:flutter_windows/view/screen/MainScreen.dart';
 import 'package:provider/provider.dart';
 
+import 'controller/ModbusHandler.dart';
 import 'controller/io.dart';
 import 'model/DataHandler.dart';
 import 'model/DataMaster.dart';
@@ -54,6 +55,25 @@ void main() async {
     // Add room data handler to master
     master.addDataHandler(id, dataHandler);
   }
+
+  MBHandler modbusHandler = new MBHandler();
+  // Get all IP Addresses
+  List<String> ipAddresses = [];
+  for(DataHandler dataHandler in master.getDataHandlerList()){
+    ipAddresses.add(dataHandler.roomDataHandler.getRoom().ip);
+  }
+  print(ipAddresses);
+
+  MBServer FLRM01_PLC01 = new MBServer(ipAddresses[0]);
+  modbusHandler.createModbusConnection(
+      server: FLRM01_PLC01,
+      readOnly: true,
+      readSize: 1,
+      readStartAddress: 0
+  );
+
+  modbusHandler.startLoop();
+
   runApp(
     MultiProvider(
       providers: [
