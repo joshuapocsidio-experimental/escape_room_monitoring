@@ -19,6 +19,8 @@ void main() async {
   List<String> roomIDList = await getDirectoryNames("resources\\");
   // Initialize Data Master
   DataMaster master = DataMaster();
+  // Initialize Modbus Handler
+  MBHandler modbusHandler = new MBHandler();
 
   for(String id in roomIDList){
     // Initialize Handlers
@@ -52,33 +54,40 @@ void main() async {
       roomDataHandler: roomDataHandler,
     );
 
+    // Get IP address of this connection server
+    String ip = dataHandler.roomDataHandler.getRoom().ip;
+    // Create modbus connection
+    modbusHandler.createModbusConnection(
+        server: MBServer(ip),
+        readOnly: true,
+        readSize: 20,
+        readStartAddress: 0
+    );
+    // Add observer to modbus handler
+    modbusHandler.addObserver(ip, dataHandler);
+
     // Add room data handler to master
     master.addDataHandler(id, dataHandler);
   }
 
-  MBHandler modbusHandler = new MBHandler();
-  // Get all IP Addresses
-  List<String> ipAddresses = [];
-  for(DataHandler dataHandler in master.getDataHandlerList()){
-    ipAddresses.add(dataHandler.roomDataHandler.getRoom().ip);
-  }
-  print(ipAddresses);
+  // // Get all IP Addresses
+  // List<String> ipAddresses = [];
+  // for(DataHandler dataHandler in master.getDataHandlerList()){
+  //   ipAddresses.add(dataHandler.roomDataHandler.getRoom().ip);
+  // }
+  // print(ipAddresses);
 
-  MBServer FLRM01_PLC01 = new MBServer(ipAddresses[0]);
-  modbusHandler.createModbusConnection(
-      server: FLRM01_PLC01,
-      readOnly: true,
-      readSize: 1,
-      readStartAddress: 0
-  );
 
-  modbusHandler.startLoop();
+  // modbusHandler.startLoop();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
           value: master,
+        ),
+        ChangeNotifierProvider.value(
+          value: modbusHandler,
         ),
       ],
       child: WinApp(),

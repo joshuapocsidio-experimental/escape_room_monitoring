@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:modbus/modbus.dart' as modbus;
 import 'package:modbus/modbus.dart';
 
+import '../model/DataObserver.dart';
+import 'ModbusObserver.dart';
+
 /// Class for holding information on each modbus device
 class MBServer{
   // Modbus parameters
@@ -22,12 +25,15 @@ class MBServer{
 }
 
 /// Class for handling Modbus connections and devices
-class MBHandler extends ChangeNotifier{
+class MBHandler with ChangeNotifier{
   // List of Modbus Connections
   final List<_MBConnection> connections = [];
+  final Map<String, _MBConnection> connectionMap = {};
+  // Poll Parameter
+  late int pollRate;
 
   // Initialize TCP Client Connection
-  void createModbusConnection({required MBServer server, required bool readOnly, required int readSize, required int readStartAddress, int writeSize=0, int writeStartAddress=0}){
+  void createModbusConnection({required MBServer server, required bool readOnly, required int readSize, required int readStartAddress, int writeSize=0, int writeStartAddress=0, int pollRate=1000}){
     ModbusClient client = modbus.createTcpClient(
       server.ipAddress,
       port: server.port,
@@ -45,11 +51,22 @@ class MBHandler extends ChangeNotifier{
       writeStartAddress: writeStartAddress,
     );
     this.connections.add(connection);
+    this.connectionMap[server.ipAddress] = connection;
   }
 
   // TODO: TEST ONLY
-  void startLoop() {
-    Timer.periodic(Duration(milliseconds: 250), (timer) {print("Loop");});
+  void addObserver(String ip, ModbusObserver observer){
+    this.connectionMap[ip]!.addObserver(observer); //TODO : Do exception handling for non-existent connections
+  }
+
+  void startPoll(){
+    Timer.periodic(Duration(milliseconds: pollRate), (timer) {
+      readAll();
+    });
+  }
+
+  void stopPoll(){
+
   }
 
   // Attempt Connections
@@ -67,7 +84,7 @@ class MBHandler extends ChangeNotifier{
   }
 
   // Get Data
-  List<int> getData(String ipAddress){
+  List<bool> getData(String ipAddress){
     for(_MBConnection c in this.connections){
       if(c.server.ipAddress == ipAddress){
         return c.inputRegisters;
@@ -85,16 +102,18 @@ class _MBConnection{
   // Modbus Read Parameters
   int readSize;
   int readStartAddress;
-  late final List<int> inputRegisters;
+  late final List<bool> inputRegisters;
   // Modbus Write Parameters
   int writeSize;
   int writeStartAddress;
-  late final List<int> outputRegisters;
+  late final List<bool> outputRegisters;
   // Read-Write Access
   final bool readOnly;
   // Modbus Server and Client
   final MBServer server;
   final ModbusClient client;
+  // Data Observers
+  final List<ModbusObserver> observers = [];
 
   // Constructor
   _MBConnection({required this.server, required this.client, required this.readOnly, required this.readSize, required this.readStartAddress, this.writeSize=0, this.writeStartAddress=0}){
@@ -105,8 +124,8 @@ class _MBConnection{
     }
 
     // Initialize output and input registers - 16 bit registers
-    this.outputRegisters = new List.filled(writeSize*16, 0);
-    this.inputRegisters = new List.filled(readSize*16, 0);
+    this.outputRegisters = new List.filled(writeSize*16, false);
+    this.inputRegisters = new List.filled(readSize*16, false);
   }
 
   // Complete Connection
@@ -123,17 +142,21 @@ class _MBConnection{
   void read() async {
     Uint16List registers = await client.readInputRegisters(this.readStartAddress, this.readSize);
 
+    int i = 0;
     // Iterate through registers
     for(int reg in registers){
       // Convert to 16 bit sequence
-      List<int> bits = _wordToBits(word: reg);
+      List<bool> bits = _wordToBits(word: reg);
 
       print("${bits.toString()} --- ${reg.toString()}");
       // Save data
-      for(int i = 0; i < bits.length; i++){
-        this.inputRegisters[i] = bits[i];
+      for(int j = 0; j < bits.length; j++){
+        this.inputRegisters[(i*16)+j] = bits[j];
       }
+      i++;
     }
+    // Notify observers of a poll
+    notifyDataObservers(inputRegisters);
   }
 
   // Write Output Registers
@@ -142,7 +165,7 @@ class _MBConnection{
   }
 
   // Convert word to bits
-  List<int> _wordToBits({required int word, bool reversed=false}){
+  List<int> _wordToInts({required int word, bool reversed=false}){
     List<int> bits = List.filled(16, 0);       // Allocation for 16 bit word
     List<int> revBits = List.filled(16, 0);  // Reversed version of bit sequence
     int num = word;       // Integer for modulo looping
@@ -155,10 +178,57 @@ class _MBConnection{
       i += 1;
     }
     // Reverse the order of the bit sequence - dependent on server side implementation
-    if(reversed == true) bits = new List.from(revBits.reversed);
-
-    bits = revBits;
+    if(reversed == true) {
+      bits = new List.from(revBits.reversed);
+    }
+    else {
+      bits = revBits;
+    }
     return bits;
+  }
+
+  // Convert word to bits
+  List<bool> _wordToBits({required int word, bool reversed=false}){
+    List<int> bits = List.filled(16, 0);       // Allocation for 16 bit word
+    List<int> revBits = List.filled(16, 0);  // Reversed version of bit sequence
+    List<bool> boolBits = [];
+
+    int num = word;       // Integer for modulo looping
+    int i = 0;
+    // For each iteration, 'num' modulo zero equates to bit assignment
+    while(num > 0) {
+      revBits[i] = num % 2;
+      num = (num~/2).toInt();     // Conversion back to integer after division
+
+      i += 1;
+    }
+    // Reverse the order of the bit sequence - dependent on server side implementation
+    if(reversed == true) {
+      bits = new List.from(revBits.reversed);
+    }
+    else {
+      bits = revBits;
+    }
+    // Convert to boolean
+    for(i=0; i<bits.length; i++){
+      if(bits[i] == 0){
+        boolBits[i] = false;
+      }
+      else{
+        boolBits[i] = true;
+      }
+    }
+    return boolBits;
+  }
+
+  void addObserver(ModbusObserver observer){
+    observers.add(observer);
+  }
+
+  void notifyDataObservers(List<bool> data){
+    for(ModbusObserver observer in observers){
+      observer.update(data);
+    }
   }
 }
 

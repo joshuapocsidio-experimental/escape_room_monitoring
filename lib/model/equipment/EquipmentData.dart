@@ -1,12 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-enum EquipmentState {
-  ON,
-  OFF,
-  FAULT,
-}
-
 final Map<String, Color> _statusColorMap = {};
 
 class EquipmentData{
@@ -14,41 +8,45 @@ class EquipmentData{
   final String equipReference;
   final String name;
   final String description;
-  final EquipmentState state;
+  late bool state;
+  late bool faulted;
 
   final String onText;
   final String offText;
 
   late String stateText;
 
-
-  EquipmentData({required this.equipReference, required this.name, required this.description, required this.state, required this.reference, required this.onText, required this.offText}) {
+  EquipmentData({required this.equipReference, required this.name, required this.description, required this.reference, required this.onText, required this.offText}) {
     _statusColorMap[onText] = Colors.blue;
     _statusColorMap[offText] = Colors.black;
-    _statusColorMap["Fault"] = Colors.red;
-
-    switch(this.state){
-      case EquipmentState.ON:
-        this.stateText = this.onText;
-        break;
-      case EquipmentState.OFF:
-        this.stateText = this.offText;
-        break;
-      case EquipmentState.FAULT:
-        this.stateText = "Fault";
-        break;
-    };
+    state = false;
+    updateState(state);
   }
 
+  void updateState(bool state) {
+    this.state = state;
+    switch (this.state) {
+      case true:
+        stateText = onText;
+        break;
+      case false:
+        stateText = offText;
+        break;
+    }
+  }
 }
-
 
 class EquipmentDataSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
-
+  List<EquipmentData> equipmentStates = [];
 
   EquipmentDataSource({required List<EquipmentData> equipmentStates}) {
-    dataGridRows = equipmentStates
+    this.equipmentStates = equipmentStates;
+    initDataGridRows();
+  }
+
+  void initDataGridRows(){
+    dataGridRows = this.equipmentStates
         .map<DataGridRow>((dataGridRow) =>
         DataGridRow(cells: [
           DataGridCell<String>(columnName: 'EquipRef', value: dataGridRow.equipReference),
@@ -58,6 +56,7 @@ class EquipmentDataSource extends DataGridSource {
           DataGridCell<String>(columnName: 'Ref', value: dataGridRow.reference),
         ])).toList();
   }
+
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
@@ -85,4 +84,9 @@ class EquipmentDataSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => dataGridRows;
+
+  void updateGridSource(){
+    initDataGridRows();
+    notifyListeners();
+  }
 }

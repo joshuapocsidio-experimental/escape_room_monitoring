@@ -1,8 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+import '../DataObserver.dart';
 import 'PuzzleData.dart';
 
-class PuzzleDataHandler {
+class PuzzleDataHandler extends DataObserver{
   final List<PuzzleData> puzzleDataList = [];
   final Map<String, PuzzleData> puzzleDataMap = {};
 
@@ -32,5 +33,12 @@ class PuzzleDataHandler {
     else puzzleState = PuzzleState.NotMonitored; // TODO : Throw Exception
 
     return PuzzleData(reference: reference, description: description, name: name, state: puzzleState);
+  }
+
+
+  @override
+  void updateData(List<bool> data) {
+    print("Puzzle Data - Update Data callback");
+    super.updateData(data);
   }
 }

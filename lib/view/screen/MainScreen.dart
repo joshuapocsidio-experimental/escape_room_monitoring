@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/FlightRoomTabularPage.dart';
+import 'package:flutter_windows/view/screen/page/flight_room/FlightRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/InvalidRoomTabularPage.dart';
 import 'package:provider/provider.dart';
 

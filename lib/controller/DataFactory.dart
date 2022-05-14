@@ -23,19 +23,19 @@ class DataFactory{
   }
 
   /// INITIAL
-  static EquipmentData createEquipment(String equipReference, String reference, String name, String description, String onText, String offText, int state){
-    EquipmentState equipmentState;
-    if(state == -1) equipmentState = EquipmentState.FAULT;
-    else if(state == 0) equipmentState = EquipmentState.OFF;
-    else if(state == 1) equipmentState = EquipmentState.ON;
-    else {
-      equipmentState = EquipmentState.FAULT;
-      print("Invalid Equipment Data");
-      // TODO: Throw Exception
-    }
-
-    return EquipmentData(equipReference: equipReference, reference: reference, offText: offText, description: description, name: name, state: equipmentState, onText: onText);
-  }
+  // static EquipmentData createEquipment(String equipReference, String reference, String name, String description, String onText, String offText, int state){
+  //   EquipmentState equipmentState;
+  //   if(state == -1) equipmentState = EquipmentState.FAULT;
+  //   else if(state == 0) equipmentState = EquipmentState.OFF;
+  //   else if(state == 1) equipmentState = EquipmentState.ON;
+  //   else {
+  //     equipmentState = EquipmentState.FAULT;
+  //     print("Invalid Equipment Data");
+  //     // TODO: Throw Exception
+  //   }
+  //
+  //   return EquipmentData(equipReference: equipReference, reference: reference, offText: offText, description: description, name: name, state: equipmentState, onText: onText);
+  // }
 
   /// INITIAL
   static PuzzleData createPuzzle(String reference, String description, String name, int state){

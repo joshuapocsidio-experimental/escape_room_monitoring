@@ -1,8 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/DataObserver.dart';
 
 import 'RoomData.dart';
 
-class RoomDataHandler{
+class RoomDataHandler extends DataObserver{
   late RoomData _roomData;
 
   void addRoom(Map<String,String> infoMap){
@@ -30,5 +31,12 @@ class RoomDataHandler{
     if(maxTime.contains(":") == false) print("Invalid Time"); // TODO: Throw Exception
 
     return RoomData(ip: ip, id: id, maxTime: maxTime, name: name);
+  }
+
+
+  @override
+  void updateData(List<bool> data) {
+    print("Room Data - Update Data callback");
+    super.updateData(data);
   }
 }

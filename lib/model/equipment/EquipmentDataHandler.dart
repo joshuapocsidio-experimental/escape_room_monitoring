@@ -1,10 +1,42 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+import '../DataObserver.dart';
 import 'EquipmentData.dart';
 
-class EquipmentDataHandler{
+// TODO : Turn this into an abstract class
+class EquipmentDataHandler extends DataObserver{
   final List<EquipmentData> equipmentDataList = [];
   final Map<String, EquipmentData> equipmentDataMap = {};
+
+  final List<Function> callbacks = [];
+
+  void updateStateByRef(String id, bool state) {
+    _updateState(id, state);
+    notifyCallbacks();
+  }
+
+  void updateStateByIndex(int idx, bool state){
+    String id = equipmentDataList[idx].equipReference;
+    _updateState(id, state);
+    notifyCallbacks();
+  }
+
+  void _updateState(String id, bool state){
+    equipmentDataMap[id]!.updateState(state);
+  }
+
+
+  void addCallback(Function callback){
+    if(callbacks.contains(callback) == false){
+      this.callbacks.add(callback);
+    }
+  }
+
+  void notifyCallbacks(){
+    for(Function callback in callbacks){
+      callback();
+    }
+  }
 
   void addEquipment(List<List<String>> equipmentStringList){
     String equipRef, equipName, equipDesc, onText, offText, ref;
@@ -27,6 +59,8 @@ class EquipmentDataHandler{
 
   /// INITIAL
   EquipmentData createEquipment(String equipRef, String ref, String equipName, String equipDesc, String onText, String offText){
-    return EquipmentData(equipReference: equipRef, reference: ref, offText: offText, description: equipDesc, name: equipName, state: EquipmentState.OFF, onText: onText);
+    return EquipmentData(equipReference: equipRef, reference: ref, offText: offText, description: equipDesc, name: equipName, onText: onText);
   }
+
+
 }
