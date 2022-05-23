@@ -1,0 +1,7 @@
+parameter,value
+roomID,flrm01
+roomName,Flight 729
+ip,10.0.0.52
+maxHour,0
+maxMin,48
+maxSec,0

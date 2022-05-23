@@ -1,0 +1,7 @@
+parameter,value
+roomID,mcrm01
+roomName,Magician's Code
+ip,10.0.2.100
+maxHour,0
+maxMin,60
+maxSec,0
