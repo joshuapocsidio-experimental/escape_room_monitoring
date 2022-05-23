@@ -1,6 +1,4 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/widgets.dart';
 import '../../../../model/puzzle/PuzzleData.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -18,14 +16,17 @@ class GameStateDataTable extends StatefulWidget {
 class _GameStateDataTableState extends State<GameStateDataTable> {
   late PuzzleDataSource _puzzleStateDataSource;
   late ScrollController _scrollController;
-  late List<PuzzleData> _puzzleStateData;
 
   @override
   void initState() {
-    _puzzleStateData = widget.puzzleDataHandler.puzzleDataList;
-    _puzzleStateDataSource = PuzzleDataSource(puzzleStates: _puzzleStateData);
+    _puzzleStateDataSource = widget.puzzleDataHandler.puzzleDataSource;   // Extract all puzzle data from puzzle data handler
+    widget.puzzleDataHandler.addCallback(_refreshTable);                  // Add callback to puzzle data handler
     _scrollController = ScrollController();
     super.initState();
+  }
+
+  void _refreshTable(){
+    _puzzleStateDataSource.updateGridSource();
   }
 
   @override
@@ -48,9 +49,9 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
               columnWidthMode: ColumnWidthMode.fitByColumnName,
               columnName: 'Ref',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomCenter,
-                  child: Text(
+                  child: const Text(
                     'Ref',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -62,9 +63,9 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
               columnName: 'Stage',
               maximumWidth: 150,
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     'Stage',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -75,9 +76,9 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
               columnWidthMode: ColumnWidthMode.fill,
               columnName: 'Description',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     'Description',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -88,9 +89,9 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
               columnWidthMode: ColumnWidthMode.fitByCellValue,
               columnName: 'Status',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     'Status',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

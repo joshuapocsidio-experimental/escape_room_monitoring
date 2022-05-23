@@ -13,7 +13,7 @@ class AlertDataHandler extends DataObserver{
 
   @override
   void updateData(List<bool> data) {
-    print("Alert Data - Update Data callback");
+//    print("Alert Data - Update Data callback");
     super.updateData(data);
   }
 }

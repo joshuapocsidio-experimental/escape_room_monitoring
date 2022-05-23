@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/widgets.dart';
 import '../../../../model/equipment/EquipmentData.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -20,44 +17,18 @@ class GameEquipmentDataTable extends StatefulWidget {
 class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
   late EquipmentDataSource _equipmentStateDataSource;
   late ScrollController _scrollController;
-  late List<EquipmentData> _equipmentStateData;
-  late Timer _modbusTimer;
-  // TODO: TEST ONLY . REMOVE AFTER
-  late int counter;
+
   @override
   void initState() {
-    _equipmentStateData = widget.equipmentDataHandler.equipmentDataList;
-    _equipmentStateDataSource = EquipmentDataSource(equipmentStates: _equipmentStateData);
+    _equipmentStateDataSource = widget.equipmentDataHandler.equipmentDataSource;  // Extract all equipment data from equipment data handler
+    widget.equipmentDataHandler.addCallback(_refreshTable);                       // Add callback to equipment data handler
     _scrollController = ScrollController();
-    widget.equipmentDataHandler.addCallback(_refreshTable);
-
-    _modbusTimer = Timer.periodic(
-        Duration(milliseconds: 1000),
-            (timer) {
-              if(counter % 4 == 0){
-                widget.equipmentDataHandler.updateStateByRef('A', false);
-                print("OFF - ${widget.equipmentDataHandler.equipmentDataMap['A']!.description} - ${widget.equipmentDataHandler.equipmentDataMap['A']!.state}");
-              }
-              if(counter % 3 == 0){
-                widget.equipmentDataHandler.updateStateByRef('A', true);
-                print("ON - ${widget.equipmentDataHandler.equipmentDataMap['A']!.description} - ${widget.equipmentDataHandler.equipmentDataMap['A']!.state}");
-              }
-              counter++;
-        }
-    );
-    counter = 0;
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _modbusTimer.cancel();
-    super.dispose();
-  }
 
   void _refreshTable(){
     _equipmentStateDataSource.updateGridSource();
-    print("refresh");
   }
 
   @override
@@ -81,9 +52,9 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
               columnWidthMode: ColumnWidthMode.fitByColumnName,
               columnName: 'EquipRef',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomCenter,
-                  child: Text(
+                  child: const Text(
                     'Equip',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -95,9 +66,9 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
               columnName: 'Equipment',
               maximumWidth: 150,
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     'Equipment',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -108,9 +79,9 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
               columnWidthMode: ColumnWidthMode.fill,
               columnName: 'Description',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     'Description',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -121,9 +92,9 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
               columnWidthMode: ColumnWidthMode.fitByCellValue,
               columnName: 'Status',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     'Status',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -134,9 +105,9 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
               columnWidthMode: ColumnWidthMode.fitByColumnName,
               columnName: 'Ref',
               label: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomCenter,
-                  child: Text(
+                  child: const Text(
                     'Ref',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

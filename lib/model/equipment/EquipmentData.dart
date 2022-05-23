@@ -1,7 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-final Map<String, Color> _statusColorMap = {};
+final Map<String, Color> EquipmentStatusContainerColorMap = {};
+final Map<String, Color> EquipmentStatusTextColorMap = {};
 
 class EquipmentData{
   final String reference;
@@ -17,9 +18,13 @@ class EquipmentData{
   late String stateText;
 
   EquipmentData({required this.equipReference, required this.name, required this.description, required this.reference, required this.onText, required this.offText}) {
-    _statusColorMap[onText] = Colors.blue;
-    _statusColorMap[offText] = Colors.black;
+    EquipmentStatusContainerColorMap[offText] = Colors.grey.withAlpha(50);
+    EquipmentStatusContainerColorMap[onText] = Colors.blue;
+
+    EquipmentStatusTextColorMap[offText] = Colors.black;
+    EquipmentStatusTextColorMap[onText] = Colors.blue;
     state = false;
+    faulted = false;
     updateState(state);
   }
 
@@ -31,6 +36,19 @@ class EquipmentData{
         break;
       case false:
         stateText = offText;
+        break;
+    }
+  }
+
+  void updateFaulted(bool faulted) {
+    // TODO : Update this function
+    this.faulted = faulted;
+    switch (this.faulted) {
+      case true:
+//        stateText = onText;
+        break;
+      case false:
+//        stateText = offText;
         break;
     }
   }
@@ -75,7 +93,7 @@ class EquipmentDataSource extends DataGridSource {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 13,
-                  color: dataGridCell.columnName == 'Status' ? _statusColorMap[dataGridCell.value] : Colors.black,
+                  color: dataGridCell.columnName == 'Status' ? EquipmentStatusTextColorMap[dataGridCell.value]: Colors.black,
                 ),
                 softWrap: true,
               ));

@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/view/widget/RoomOverviewStageCard.dart';
+import 'package:flutter_windows/model/equipment/EquipmentData.dart';
+import 'room/overview/RoomOverviewStageCard.dart';
 
 class RoomEquipmentGridView extends StatefulWidget {
   final List<Widget> equipmentBoxes;
@@ -12,8 +13,8 @@ class RoomEquipmentGridView extends StatefulWidget {
 }
 
 class _RoomEquipmentGridViewState extends State<RoomEquipmentGridView> {
-//  final ScrollController _verticalScrollController = ScrollController();
   late ScrollController _scrollController;
+
   @override
   void initState() {
     _scrollController = ScrollController();

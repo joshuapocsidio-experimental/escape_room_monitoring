@@ -1,7 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import '../../controller/data/exception/MissingDataHandlerException.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
+import 'package:flutter_windows/view/screen/page/elevator_room/ElevatorRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/flight_room/FlightRoomTabularPage.dart';
 import 'package:flutter_windows/view/screen/page/room_tabular/InvalidRoomTabularPage.dart';
+import 'package:flutter_windows/view/screen/page/room_tabular/MagicianRoomTabularPage.dart';
+import 'package:flutter_windows/view/screen/page/room_tabular/VaultRoomTabularPage.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/DataMaster.dart';
@@ -31,21 +35,13 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    DataMaster master = Provider.of<DataMaster>(context);
-
-    RoomData vaultRoomData = master.getDataHandler("tvrm01").roomDataHandler.getRoom();
-    RoomData flightRoomData = master.getDataHandler("flrm01").roomDataHandler.getRoom();
-    RoomData magicianRoomData = master.getDataHandler("mcrm01").roomDataHandler.getRoom();
-    RoomData elevatorRoomData = master.getDataHandler("term01").roomDataHandler.getRoom();
+    DataMaster dataMaster = Provider.of<DataMaster>(context);
 
     return NavigationView(
       appBar: buildNavigationAppBar(),
       pane: buildNavigationPane(),
       content: buildNavigationBody(
-        vaultRoomData: vaultRoomData,
-        flightRoomData: flightRoomData,
-        magicianRoomData: magicianRoomData,
-        elevatorRoomData: elevatorRoomData,
+        dataMaster: dataMaster,
       ),
     );
   }
@@ -69,24 +65,65 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget buildNavigationBody({required RoomData vaultRoomData, required RoomData flightRoomData, required RoomData magicianRoomData, required RoomData elevatorRoomData}) {
+  Widget buildNavigationBody({required DataMaster dataMaster}) {
+    List<Widget> navigationWidgets = [];
+
+    RoomData vaultRoomData;
+    RoomData flightRoomData;
+    RoomData magicianRoomData;
+    RoomData elevatorRoomData;
+
+    navigationWidgets.add(OverviewPage());
+
+    // The Vault Escape Room
+    try{
+      vaultRoomData = dataMaster.getDataHandler("tvrm01").roomDataHandler.getRoom();
+      navigationWidgets.add(VaultRoomTabularPage(roomID: vaultRoomData.id, roomName: vaultRoomData.name, maxTime: vaultRoomData.maxTime));
+    }
+    on MissingDataHandlerException catch (e) {
+      print(e.message);
+      navigationWidgets.add(InvalidRoomTabularPage(roomName: "The Vault Escape Room"));
+    }
+    // Flight Room Escape Room
+    try{
+      flightRoomData = dataMaster.getDataHandler("flrm01").roomDataHandler.getRoom();
+      navigationWidgets.add(FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime));
+    }
+    on MissingDataHandlerException catch (e) {
+      print(e.message);
+      navigationWidgets.add(InvalidRoomTabularPage(roomName: "Flight 729 Escape Room"));
+    }
+    // Magician's Code Escape Room
+    try{
+      magicianRoomData = dataMaster.getDataHandler("mcrm01").roomDataHandler.getRoom();
+      navigationWidgets.add(MagicianRoomTabularPage(roomID: magicianRoomData.id, roomName: magicianRoomData.name, maxTime: magicianRoomData.maxTime));
+    }
+    on MissingDataHandlerException catch (e) {
+      print(e.message);
+      navigationWidgets.add(InvalidRoomTabularPage(roomName: "Magician's Code Escape Room"));
+    }
+    // The Elevator Escape Room
+    try{
+      elevatorRoomData = dataMaster.getDataHandler("term01").roomDataHandler.getRoom();
+      navigationWidgets.add(ElevatorRoomTabularPage(roomID: elevatorRoomData.id, roomName: elevatorRoomData.name, maxTime: elevatorRoomData.maxTime));
+    }
+    on MissingDataHandlerException catch (e) {
+      print(e.message);
+      navigationWidgets.add(InvalidRoomTabularPage(roomName: "The Elevator Escape Room"));
+    }
+
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Trends
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Alerts
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Handover Notes
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Info Center
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Preferences
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Exit
+
     return NavigationBody(
       animationDuration: Duration(milliseconds: 250),
       animationCurve: Curves.easeInOut,
       index: _currentIndex,
-      children: [
-        OverviewPage(),
-        InvalidRoomTabularPage(roomName: "The Vault Escape Room"),
-        FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime),
-        InvalidRoomTabularPage(roomName: "Magician's Code Escape Room"),
-        InvalidRoomTabularPage(roomName: "The Elevator Escape Room"),
-        InvalidRoomTabularPage(roomName: "Placeholder"),
-        InvalidRoomTabularPage(roomName: "Placeholder"),
-        InvalidRoomTabularPage(roomName: "Placeholder"),
-        InvalidRoomTabularPage(roomName: "Placeholder"),
-        InvalidRoomTabularPage(roomName: "Placeholder"),
-        InvalidRoomTabularPage(roomName: "Placeholder"),
-      ],
+      children: navigationWidgets,
     );
   }
 

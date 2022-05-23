@@ -5,6 +5,9 @@ import 'EquipmentData.dart';
 
 // TODO : Turn this into an abstract class
 class EquipmentDataHandler extends DataObserver{
+  // Data Source
+  late final EquipmentDataSource equipmentDataSource;
+
   final List<EquipmentData> equipmentDataList = [];
   final Map<String, EquipmentData> equipmentDataMap = {};
 

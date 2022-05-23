@@ -1,11 +1,30 @@
-import 'package:fluent_ui/fluent_ui.dart';
-
 import '../DataObserver.dart';
 import 'PuzzleData.dart';
 
 class PuzzleDataHandler extends DataObserver{
+  // Data Source
+  late final PuzzleDataSource puzzleDataSource;
+
   final List<PuzzleData> puzzleDataList = [];
   final Map<String, PuzzleData> puzzleDataMap = {};
+
+  final List<Function> callbacks = [];
+
+  void addCallback(Function callback){
+    if(callbacks.contains(callback) == false){
+      this.callbacks.add(callback);
+    }
+  }
+
+  void removeCallback(Function callback){
+    callbacks.remove(callback);
+  }
+
+  void notifyCallbacks(){
+    for(Function callback in callbacks){
+      callback();
+    }
+  }
 
   void addPuzzle(List<List<String>> puzzleStringList){
     String puzzleRef, puzzleName, puzzleDesc, monitored;
@@ -28,7 +47,7 @@ class PuzzleDataHandler extends DataObserver{
   PuzzleData createPuzzle(String reference, String name, String description, String monitored){
     PuzzleState puzzleState;
 
-    if(monitored == "yes") puzzleState = PuzzleState.NotAttempted;
+    if(monitored == "yes") puzzleState = PuzzleState.Incomplete;
     else if(monitored == "no") puzzleState = PuzzleState.NotMonitored;
     else puzzleState = PuzzleState.NotMonitored; // TODO : Throw Exception
 
@@ -38,7 +57,6 @@ class PuzzleDataHandler extends DataObserver{
 
   @override
   void updateData(List<bool> data) {
-    print("Puzzle Data - Update Data callback");
     super.updateData(data);
   }
 }

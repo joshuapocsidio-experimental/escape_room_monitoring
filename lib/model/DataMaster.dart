@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import '../controller/data/exception/MissingDataHandlerException.dart';
 import 'package:flutter_windows/model/DataHandler.dart';
 
 class DataMaster with ChangeNotifier{
@@ -21,7 +22,7 @@ class DataMaster with ChangeNotifier{
 
   DataHandler getDataHandler(String id){
     if(_dataHandlerMap.containsKey(id) == false) {
-      print("Handler does not exist."); // TODO: Throw Exception
+      throw MissingDataHandlerException(message: "MissingDataHandlerException : Data Handler '$id' does not exist.");
     }
 
     return _dataHandlerMap[id]!;

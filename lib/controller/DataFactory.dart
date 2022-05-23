@@ -37,23 +37,23 @@ class DataFactory{
   //   return EquipmentData(equipReference: equipReference, reference: reference, offText: offText, description: description, name: name, state: equipmentState, onText: onText);
   // }
 
-  /// INITIAL
-  static PuzzleData createPuzzle(String reference, String description, String name, int state){
-    PuzzleState puzzleState;
-
-    if(state == -1) puzzleState = PuzzleState.NotMonitored;
-    else if(state == 0) puzzleState = PuzzleState.NotAttempted;
-    else if(state == 1) puzzleState = PuzzleState.InProgress;
-    else if(state == 2) puzzleState = PuzzleState.Attempted;
-    else if(state == 3) puzzleState = PuzzleState.Bypassed;
-    else if(state == 4) puzzleState = PuzzleState.Completed;
-    else{
-      puzzleState = PuzzleState.NotMonitored;
-      print("Invalid Puzzle Data");
-      // TODO: Throw Exception
-    }
-    return PuzzleData(reference: reference, description: description, name: name, state: puzzleState);
-  }
+//  /// INITIAL
+//  static PuzzleData createPuzzle(String reference, String description, String name, int state){
+//    PuzzleState puzzleState;
+//
+//    if(state == -1) puzzleState = PuzzleState.NotMonitored;
+//    else if(state == 0) puzzleState = PuzzleState.NotAttempted;
+//    else if(state == 1) puzzleState = PuzzleState.InProgress;
+//    else if(state == 2) puzzleState = PuzzleState.Attempted;
+//    else if(state == 3) puzzleState = PuzzleState.Bypassed;
+//    else if(state == 4) puzzleState = PuzzleState.Completed;
+//    else{
+//      puzzleState = PuzzleState.NotMonitored;
+//      print("Invalid Puzzle Data");
+//      // TODO: Throw Exception
+//    }
+//    return PuzzleData(reference: reference, description: description, name: name, state: puzzleState);
+//  }
 
   /// INITIAL
   static RoomData createRoom(String ip, String id, String maxTime, String name){

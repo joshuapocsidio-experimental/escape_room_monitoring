@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
+import 'package:flutter_windows/model/equipment/EquipmentData.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
+import 'package:flutter_windows/model/puzzle/PuzzleData.dart';
+import 'controller/room/flight_room/FlightRoomEquipmentDataHandler.dart';
+import 'controller/room/flight_room/FlightRoomPuzzleDataHandler.dart';
 import 'package:flutter_windows/view/screen/MainScreen.dart';
 import 'package:provider/provider.dart';
 
-import 'controller/ModbusHandler.dart';
+import 'controller/data/ModbusHandler.dart';
 import 'controller/io.dart';
 import 'model/DataHandler.dart';
 import 'model/DataMaster.dart';
@@ -16,6 +20,7 @@ import 'model/puzzle/PuzzleDataHandler.dart';
 import 'model/room/RoomDataHandler.dart';
 
 void main() async {
+  List<String> roomIDListActivated = ['flrm01'];
   List<String> roomIDList = await getDirectoryNames("resources\\");
   // Initialize Data Master
   DataMaster master = DataMaster();
@@ -23,11 +28,14 @@ void main() async {
   MBHandler modbusHandler = new MBHandler();
 
   for(String id in roomIDList){
+    if(roomIDListActivated.contains(id) == false){
+      break;
+    }
     // Initialize Handlers
     ActionDataHandler actionDataHandler = ActionDataHandler();
     AlertDataHandler alertDataHandler = AlertDataHandler();
-    EquipmentDataHandler equipmentDataHandler = EquipmentDataHandler();
-    PuzzleDataHandler puzzleDataHandler = PuzzleDataHandler();
+    FlightRoomEquipmentDataHandler equipmentDataHandler = FlightRoomEquipmentDataHandler();
+    FlightRoomPuzzleDataHandler puzzleDataHandler = FlightRoomPuzzleDataHandler();
     RoomDataHandler roomDataHandler = RoomDataHandler();
 
     // Extract Room Information
@@ -41,8 +49,12 @@ void main() async {
     roomDataHandler.addRoom(roomInfo);
     // Parse and Add Equipment Data List
     equipmentDataHandler.addEquipment(equipmentDataList);
+    EquipmentDataSource equipmentDataSource = EquipmentDataSource(equipmentStates: equipmentDataHandler.equipmentDataList);
+    equipmentDataHandler.equipmentDataSource = equipmentDataSource;
     // Parse and Add Puzzle Data List
     puzzleDataHandler.addPuzzle(puzzleDataList);
+    PuzzleDataSource puzzleDataSource = PuzzleDataSource(puzzleStates: puzzleDataHandler.puzzleDataList);
+    puzzleDataHandler.puzzleDataSource = puzzleDataSource;
 
     // Initialize Data Handler
     DataHandler dataHandler = DataHandler(
@@ -58,27 +70,39 @@ void main() async {
     String ip = dataHandler.roomDataHandler.getRoom().ip;
     // Create modbus connection
     modbusHandler.createModbusConnection(
-        server: MBServer(ip),
-        readOnly: true,
-        readSize: 20,
-        readStartAddress: 0
+      server: new MBServer(ip),
+      readOnly: true,
+      coilReadSize: 1000, coilStartAddress: 0,
+      discreteInputReadSize: 1000, discreteInputStartAddress: 0,
+      holdingRegisterReadSize: 1, holdingRegisterStartAddress: 0,
+      inputRegisterStartAddress: 1, inputRegisterReadSize: 0,
+      pollRate: 1000
     );
-    // Add observer to modbus handler
-    modbusHandler.addObserver(ip, dataHandler);
+    // Attempt connection establishment
+    await modbusHandler.connectionMap[ip]!.connect();
 
-    // Add room data handler to master
-    master.addDataHandler(id, dataHandler);
+    int connectCount = 0;
+    // Retry connections - 2 second intervals, up to 5 retries
+    while(modbusHandler.connectionMap[ip]!.isConnected == false && connectCount < 5){
+      // Attempt connection establishment
+      modbusHandler.connectionMap[ip]!.connect();
+      connectCount++;
+      print("Debug: Connection establishment unsuccessful. Retrying... $connectCount/5");
+    }
+
+    if(modbusHandler.connectionMap[ip]!.isConnected == true) {
+      print("Debug: Connection Successful");
+      // Add observer to modbus handler
+      modbusHandler.addObserver(ip, dataHandler);
+
+      // Add room data handler to master
+      master.addDataHandler(id, dataHandler);
+    }
+    else{
+      print("Debug: Connection Exception - Cannot establish connection with IP address $ip");
+    }
   }
-
-  // // Get all IP Addresses
-  // List<String> ipAddresses = [];
-  // for(DataHandler dataHandler in master.getDataHandlerList()){
-  //   ipAddresses.add(dataHandler.roomDataHandler.getRoom().ip);
-  // }
-  // print(ipAddresses);
-
-
-  // modbusHandler.startLoop();
+  modbusHandler.startPoll();
 
   runApp(
     MultiProvider(

@@ -36,7 +36,7 @@ class RoomDataHandler extends DataObserver{
 
   @override
   void updateData(List<bool> data) {
-    print("Room Data - Update Data callback");
+//    print("Room Data - Update Data callback");
     super.updateData(data);
   }
 }

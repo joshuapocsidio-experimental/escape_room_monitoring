@@ -1,14 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/view/widget/RoomEquipmentGridView.dart';
-import 'package:flutter_windows/view/widget/RoomStageGridView.dart';
-import 'package:flutter_windows/view/widget/RoomOverviewStageCard.dart';
-
-import 'RoomOverviewEquipmentCard.dart';
+import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
+import 'package:flutter_windows/model/puzzle/PuzzleDataHandler.dart';
+import 'package:flutter_windows/view/widget/room/overview/RoomOverviewGridView.dart';
 
 class RoomOverviewCard extends StatefulWidget {
-  late String roomName;
+  final String roomName;
+  final PuzzleDataHandler puzzleDataHandler;
+  final EquipmentDataHandler equipmentDataHandler;
 
-  RoomOverviewCard({required this.roomName});
+  RoomOverviewCard({required this.roomName, required this.puzzleDataHandler, required this.equipmentDataHandler});
 
   @override
   _RoomOverviewCardState createState() => _RoomOverviewCardState();
@@ -19,39 +19,6 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
   String _stateType = "Puzzles";
   int? _numColumns = 10;
 
-  List<Widget> _stageBoxes = [
-    RoomOverviewStageCard(color: Colors.green, label: "1",),
-    RoomOverviewStageCard(color: Colors.grey.withAlpha(15), label: "2",),
-    RoomOverviewStageCard(color: Colors.grey.withAlpha(15), label: "3",),
-    RoomOverviewStageCard(color: Colors.green, label: "4",),
-    RoomOverviewStageCard(color: Colors.teal, label: "5",),
-    RoomOverviewStageCard(color: Colors.green, label: "6",),
-    RoomOverviewStageCard(color: Colors.grey.withAlpha(15), label: "7",),
-    RoomOverviewStageCard(color: Colors.teal, label: "8",),
-    RoomOverviewStageCard(color: Colors.green, label: "9",),
-    RoomOverviewStageCard(color: Colors.grey.withAlpha(15), label: "10",),
-    RoomOverviewStageCard(color: Colors.grey.withAlpha(70), label: "11",),
-    RoomOverviewStageCard(color: Colors.grey.withAlpha(70), label: "12",),
-  ];
-
-  List<Widget> _equipmentBoxes = [
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "A", subLabel: "1"),
-    RoomOverviewEquipmentCard(color: Colors.blue, label: "B", subLabel: "4"),
-    RoomOverviewEquipmentCard(color: Colors.blue, label: "C", subLabel: "5"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "D", subLabel: "5"),
-    RoomOverviewEquipmentCard(color: Colors.blue, label: "E", subLabel: "6"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "F", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "G", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.red, label: "H", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.red, label: "I", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "J", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "K", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "L", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "M", subLabel: "9"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "N", subLabel: "11"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "O", subLabel: "11"),
-    RoomOverviewEquipmentCard(color: Colors.grey.withAlpha(70), label: "P", subLabel: "11"),
-  ];
   void toggleGameState(bool state){
     setState(() {
       if(_isChecked == false) {
@@ -64,6 +31,11 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
       }
 
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -232,12 +204,12 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
           flex: 17,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: _isChecked == false ? RoomStageGridView(
-              stageBoxes: _stageBoxes,
-              numColumns: _numColumns ?? 10,
-            ) : RoomEquipmentGridView(
-                equipmentBoxes: _equipmentBoxes,
-                numColumns: _numColumns ?? 10),
+            child: RoomOverviewGridView(
+              toggle: _isChecked,
+              numColumns: _numColumns!,
+              equipmentDataHandler: widget.equipmentDataHandler,
+              puzzleDataHandler: widget.puzzleDataHandler,
+            ),
           ),
         ),
         Expanded(

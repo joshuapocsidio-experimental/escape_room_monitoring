@@ -88,11 +88,10 @@ Future<List<List<String>>> ExtractPuzzleDataList(String roomID) async {
     List<dynamic> puzzleEntry = puzzleEntries[i];
 
     // Extract parameters
-    String puzzleRef = puzzleEntry[0].toString().trim();
+    String puzzleRef = puzzleEntry[0].toString().trim().padLeft(2, '0');
     String puzzleName = puzzleEntry[1].toString().trim();
     String puzzleDesc = puzzleEntry[2].toString().trim();
     String monitored = puzzleEntry[3].toString().trim();
-
     // Append to list
     List<String> equipParamList = [];
     equipParamList.add(puzzleRef);
