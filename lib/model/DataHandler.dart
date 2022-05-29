@@ -32,6 +32,7 @@ class DataHandler extends ModbusObserver{
 
     equipmentDataHandler.updateData(data);
     puzzleDataHandler.updateData(data);
+    alertDataHandler.updateData(data);
   }
 
 }

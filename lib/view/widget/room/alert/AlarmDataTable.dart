@@ -1,5 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
+import 'package:flutter_windows/model/alert/WarningAlert.dart';
 import '../../../../model/action/ActionData.dart';
 import '../../../../model/alert/AlertData.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -7,30 +9,29 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class AlarmDataTable extends StatefulWidget {
+  final AlertDataHandler alertDataHandler;
+  late int tableMode;
+
+  AlarmDataTable({required this.alertDataHandler, required this.tableMode});
   @override
   _AlarmDataTableState createState() => _AlarmDataTableState();
 }
 
 class _AlarmDataTableState extends State<AlarmDataTable> {
   late AlertDataSource _alertDataSource;
-//  final ScrollController _verticalScrollController = ScrollController();
   late ScrollController _scrollController;
 
-  List<AlertData> _alertData = [
-    AlertData(time: "11:38", type: AlertType.Warning, title: "Keypad Door Error", description: "System Override has not been solved but the door is open", reference: "2"),
-    AlertData(time: "11:50", type: AlertType.Info, title: "Progress Update", description: "Game is 25% complete", reference: "3"),
-    AlertData(time: "11:52", type: AlertType.Alarm, title: "Test Tube Limit Switches Position Fault", description: "Limit Switch B is activated but not Limit Switch A", reference: "H, I"),
-    AlertData(time: "12:10", type: AlertType.Alarm, title: "Power Supply Fault", description: "24V supply circuit breaker is tripped", reference: "-"),
-    AlertData(time: "12:12", type: AlertType.Info, title: "Progress Update", description: "Game is 50% complete", reference: "6"),
-    AlertData(time: "12:20", type: AlertType.Attention, title: "Hint Requested", description: "Hint has been requested", reference: "-"),
-    AlertData(time: "12:22", type: AlertType.Info, title: "Progress Update", description: "Game is 75% complete", reference: "9"),
-    ];
 
   @override
   void initState() {
-    _alertDataSource = AlertDataSource(alerts: _alertData);
+    _alertDataSource = widget.alertDataHandler.alertDataSource;  // Extract all equipment data from equipment data handler
+    widget.alertDataHandler.addCallback(_refreshTable);                       // Add callback to equipment data handler
     _scrollController = ScrollController();
     super.initState();
+  }
+
+  void _refreshTable() {
+    widget.alertDataHandler.updateTableMode(widget.tableMode);
   }
 
   @override

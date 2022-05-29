@@ -14,14 +14,6 @@ class DataFactory{
     return ActionData(time: time, description: description, reference: reference, type: actionType);
   }
 
-  /// CONCURRENT
-  static AlertData createAlert(String time, String title, String description, String reference, AlertType alertType){
-    // Validate Time
-    if(time.contains(":") == false) print("Invalid Time"); // TODO: Throw Exception
-
-    return AlertData(time: time, title: title, description: description, type: alertType, reference: reference);
-  }
-
   /// INITIAL
   // static EquipmentData createEquipment(String equipReference, String reference, String name, String description, String onText, String offText, int state){
   //   EquipmentState equipmentState;

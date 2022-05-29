@@ -95,7 +95,6 @@ class PuzzleData{
       stateText = "Completed";
       print("Completed Detected");
       this.isCompleted = true;
-      return;
     }
     else{
       state = PuzzleState.Incomplete;

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/view/widget/room/alert/AlarmDataTable.dart';
 import '../../controller/data/exception/MissingDataHandlerException.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
 import 'package:flutter_windows/view/screen/page/elevator_room/ElevatorRoomTabularPage.dart';
@@ -113,7 +114,8 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Trends
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Alerts
+    navigationWidgets.add(AlarmDataTable(tableMode: 1, alertDataHandler: dataMaster.getDataHandler('flrm01').alertDataHandler,));
+    // navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Alerts
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Handover Notes
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Info Center
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Preferences

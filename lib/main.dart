@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windows/controller/room/flight_room/FlightRoomAlertDataHandler.dart';
+import 'package:flutter_windows/model/alert/AlertData.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/model/equipment/EquipmentData.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
@@ -33,7 +35,7 @@ void main() async {
     }
     // Initialize Handlers
     ActionDataHandler actionDataHandler = ActionDataHandler();
-    AlertDataHandler alertDataHandler = AlertDataHandler();
+    FlightRoomAlertDataHandler alertDataHandler = FlightRoomAlertDataHandler();
     FlightRoomEquipmentDataHandler equipmentDataHandler = FlightRoomEquipmentDataHandler();
     FlightRoomPuzzleDataHandler puzzleDataHandler = FlightRoomPuzzleDataHandler();
     RoomDataHandler roomDataHandler = RoomDataHandler();
@@ -44,6 +46,8 @@ void main() async {
     List<List<String>> equipmentDataList = await ExtractEquipmentDataList(id);
     // Extract Puzzle Data List
     List<List<String>> puzzleDataList = await ExtractPuzzleDataList(id);
+    // Extract Alert Data List
+    List<List<String>> alertDataList = await ExtractAlertDataList(id);
 
     // Parse and Add Room Information
     roomDataHandler.addRoom(roomInfo);
@@ -55,6 +59,11 @@ void main() async {
     puzzleDataHandler.addPuzzle(puzzleDataList);
     PuzzleDataSource puzzleDataSource = PuzzleDataSource(puzzleStates: puzzleDataHandler.puzzleDataList);
     puzzleDataHandler.puzzleDataSource = puzzleDataSource;
+    // Parse and Add Alert Data List
+    alertDataHandler.addAlertReference(alertDataList);
+    AlertDataSource alertDataSource = AlertDataSource(alerts: alertDataHandler.activeAlertList);
+    alertDataHandler.alertDataSource = alertDataSource;
+
 
     // Initialize Data Handler
     DataHandler dataHandler = DataHandler(

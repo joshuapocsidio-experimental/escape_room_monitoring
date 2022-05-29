@@ -19,7 +19,6 @@ class FlightRoomPuzzleDataHandler extends PuzzleDataHandler{
     FLRM01_Puzz1_InProg_S = data[222];
     FLRM01_Puzz1_Fin_S = data[223];
     FLRM01_Puzz1_Byp_S = data[224];
-    print("PROG : $FLRM01_Puzz1_InProg_S");
     _processPuzzleState(id: '01', completionState: FLRM01_Puzz1_Fin_S, inProgress: FLRM01_Puzz1_InProg_S, isBypassed: FLRM01_Puzz1_Byp_S);
     // 2 - Hidden Key (not monitored)
     // 3 - Gun Box Lock (not monitored)
@@ -70,21 +69,27 @@ class FlightRoomPuzzleDataHandler extends PuzzleDataHandler{
     changesMade = false;
   }
 
-  void _processPuzzleState({required String id, required bool completionState, required bool inProgress, required bool isBypassed}){
+  void _processPuzzleState({required String id, required bool completionState, required bool inProgress, required bool isBypassed}) {
     // Create temporary puzzle for testing : TODO ; Create a better implementation to check if puzzle state has changed
     PuzzleData puzzle = super.puzzleDataMap[id]!;
-    if(puzzle.isBypassed != isBypassed ||
-        puzzle.isCompleted != completionState ||
-        puzzle.inProgress != inProgress){
-
-      print("Debug: Puzzle update detected.");
+    if (puzzle.isBypassed != isBypassed) {
+      print("DEBUG: Bypass Update Detected");
+      changesMade = true;
+    }
+    if (puzzle.isCompleted != completionState) {
+      print("DEBUG: Completion Update Detected");
+      changesMade = true;
+    }
+    if (puzzle.inProgress != inProgress) {
+      print("DEBUG: Progress Update Detected");
+      changesMade = true;
+    }
+    if(changesMade){
       super.puzzleDataMap[id]!.updateState(
         isCompleted: completionState,
         isBypassed: isBypassed,
         inProgress: inProgress,
       );
-      changesMade = true;
     }
-
   }
 }

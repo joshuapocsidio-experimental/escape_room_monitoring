@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/view/widget/room/control/RoomTabularControlCard.dart';
 import 'package:provider/provider.dart';
 import '../../../../model/DataHandler.dart';
@@ -30,6 +31,7 @@ class _ElevatorRoomTabularPageState extends State<ElevatorRoomTabularPage> {
 
     EquipmentDataHandler ElevatorEquipmentDataHandler = handler.equipmentDataHandler;
     PuzzleDataHandler ElevatorPuzzleDataHandler = handler.puzzleDataHandler;
+    AlertDataHandler elevatorAlertDataHandler = handler.alertDataHandler;
     return Container(
       color: Colors.grey.withAlpha(10),
       child: Row(
@@ -60,7 +62,7 @@ class _ElevatorRoomTabularPageState extends State<ElevatorRoomTabularPage> {
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8, top: 4, bottom: 8, right: 4),
-                    child: RoomTabularAlarmCard(),
+                    child: RoomTabularAlarmCard(alertDataHandler: elevatorAlertDataHandler,),
                   ),
                 ),
               ],

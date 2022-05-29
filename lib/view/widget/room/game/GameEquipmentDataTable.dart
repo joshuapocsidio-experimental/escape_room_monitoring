@@ -26,7 +26,6 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
     super.initState();
   }
 
-
   void _refreshTable(){
     _equipmentStateDataSource.updateGridSource();
   }

@@ -1,6 +1,26 @@
 import 'package:flutter_windows/model/alert/AlertData.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class AttentionAlert extends AlertData{
-  AttentionAlert({required String time, required AlertType type, required String title, required String description, required String reference}) : super(time: time, type: type, title: title, description: description, reference: reference);
+  AttentionAlert({required String id, required String title, required String description, required String reference, required bool active}) :
+      super(
+        id: title,
+        title: title,
+        description: description,
+        reference: reference,
+        alertText: "2 - Attention",
+        activeColor: Colors.red,
+        active: active,
+      );
 
+  @override
+  AttentionAlert clone([bool isActive = false]) {
+    return AttentionAlert(
+      id: id,
+      reference: reference,
+      description: description,
+      title: title,
+      active: isActive,
+    );
+  }
 }

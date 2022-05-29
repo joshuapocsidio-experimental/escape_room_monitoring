@@ -46,7 +46,7 @@ Future<Map<String, String>> ExtractRoomInfo(String roomID) async {
 }
 
 Future<List<List<String>>> ExtractEquipmentDataList(String roomID) async {
-  String fileName = "${roomID}\\${roomID}_equip.csv";
+  String fileName = "$roomID\\${roomID}_equip.csv";
   List<List<dynamic>> equipmentEntries = await ReadCSV(fileName);
 
   List<List<String>> equipmentDataList = [];
@@ -78,7 +78,7 @@ Future<List<List<String>>> ExtractEquipmentDataList(String roomID) async {
 }
 
 Future<List<List<String>>> ExtractPuzzleDataList(String roomID) async {
-  String fileName = "${roomID}\\${roomID}_puzzles.csv";
+  String fileName = "$roomID\\${roomID}_puzzles.csv";
   List<List<dynamic>> puzzleEntries = await ReadCSV(fileName);
 
   List<List<String>> puzzleDataList = [];
@@ -93,14 +93,45 @@ Future<List<List<String>>> ExtractPuzzleDataList(String roomID) async {
     String puzzleDesc = puzzleEntry[2].toString().trim();
     String monitored = puzzleEntry[3].toString().trim();
     // Append to list
-    List<String> equipParamList = [];
-    equipParamList.add(puzzleRef);
-    equipParamList.add(puzzleName);
-    equipParamList.add(puzzleDesc);
-    equipParamList.add(monitored);
-    // Add to list of equipment list strings
-    puzzleDataList.add(equipParamList);
+    List<String> puzzleParamList = [];
+    puzzleParamList.add(puzzleRef);
+    puzzleParamList.add(puzzleName);
+    puzzleParamList.add(puzzleDesc);
+    puzzleParamList.add(monitored);
+    // Add to list of puzzle list strings
+    puzzleDataList.add(puzzleParamList);
   }
 
   return puzzleDataList;
+}
+
+Future<List<List<String>>> ExtractAlertDataList(String roomID) async{
+  String fileName = "$roomID\\${roomID}_alerts.csv";
+  List<List<dynamic>> alertEntries = await ReadCSV(fileName);
+
+  List<List<String>> alertDataList = [];
+
+  // Start with 1 to ignore header line
+  for(int i = 1; i < alertEntries.length; i++) {
+    List<dynamic> alertEntry = alertEntries[i];
+
+    // Extract parameters
+    String alertID = alertEntry[0].toString().trim().padLeft(2, '0');
+    String alertType = alertEntry[1].toString().trim();
+    String alertName = alertEntry[2].toString().trim();
+    String alertDesc = alertEntry[3].toString().trim();
+    String alertRef = alertEntry[4].toString().trim();
+
+    // Append to List
+    List<String> alertParamList = [];
+    alertParamList.add(alertID);
+    alertParamList.add(alertType);
+    alertParamList.add(alertName);
+    alertParamList.add(alertDesc);
+    alertParamList.add(alertRef);
+    // Add to list of alert list strings
+    alertDataList.add(alertParamList);
+  }
+
+  return alertDataList;
 }
