@@ -1,12 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_windows/controller/room/flight_room/FlightRoomAlertDataHandler.dart';
+import 'package:flutter_windows/controller/room/flight_room/FlightRoomSummaryDataHandler.dart';
 import 'package:flutter_windows/model/alert/AlertData.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/model/equipment/EquipmentData.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
+import 'package:flutter_windows/model/hint/HintData.dart';
+import 'package:flutter_windows/model/hint/HintDataHandler.dart';
 import 'package:flutter_windows/model/puzzle/PuzzleData.dart';
 import 'controller/room/flight_room/FlightRoomEquipmentDataHandler.dart';
 import 'controller/room/flight_room/FlightRoomPuzzleDataHandler.dart';
@@ -22,6 +27,7 @@ import 'model/puzzle/PuzzleDataHandler.dart';
 import 'model/room/RoomDataHandler.dart';
 
 void main() async {
+  int pollRate = 500;
   List<String> roomIDListActivated = ['flrm01'];
   List<String> roomIDList = await getDirectoryNames("resources\\");
   // Initialize Data Master
@@ -38,7 +44,8 @@ void main() async {
     FlightRoomAlertDataHandler alertDataHandler = FlightRoomAlertDataHandler();
     FlightRoomEquipmentDataHandler equipmentDataHandler = FlightRoomEquipmentDataHandler();
     FlightRoomPuzzleDataHandler puzzleDataHandler = FlightRoomPuzzleDataHandler();
-    RoomDataHandler roomDataHandler = RoomDataHandler();
+    RoomDataHandler roomDataHandler = FlightRoomSummaryDataHandler();
+    HintDataHandler hintDataHandler = HintDataHandler();
 
     // Extract Room Information
     Map<String, String> roomInfo = await ExtractRoomInfo(id);
@@ -48,6 +55,8 @@ void main() async {
     List<List<String>> puzzleDataList = await ExtractPuzzleDataList(id);
     // Extract Alert Data List
     List<List<String>> alertDataList = await ExtractAlertDataList(id);
+    // Extract Hint Data List
+    List<List<String>> hintDataList = await ExtractHintDataList(id);
 
     // Parse and Add Room Information
     roomDataHandler.addRoom(roomInfo);
@@ -63,6 +72,10 @@ void main() async {
     alertDataHandler.addAlertReference(alertDataList);
     AlertDataSource alertDataSource = AlertDataSource(alerts: alertDataHandler.activeAlertList);
     alertDataHandler.alertDataSource = alertDataSource;
+    // Parse and Add Hint Data List
+    hintDataHandler.addHint(hintDataList);
+    HintDataSource hintDataSource = HintDataSource(hintStates: hintDataHandler.hintDataList);
+    hintDataHandler.hintDataSource = hintDataSource;
 
 
     // Initialize Data Handler
@@ -73,6 +86,7 @@ void main() async {
       equipmentDataHandler: equipmentDataHandler,
       puzzleDataHandler: puzzleDataHandler,
       roomDataHandler: roomDataHandler,
+      hintDataHandler: hintDataHandler,
     );
 
     // Get IP address of this connection server
@@ -85,7 +99,7 @@ void main() async {
       discreteInputReadSize: 1000, discreteInputStartAddress: 0,
       holdingRegisterReadSize: 1, holdingRegisterStartAddress: 0,
       inputRegisterStartAddress: 1, inputRegisterReadSize: 0,
-      pollRate: 1000
+      pollRate: pollRate,
     );
     // Attempt connection establishment
     await modbusHandler.connectionMap[ip]!.connect();
@@ -103,6 +117,7 @@ void main() async {
       print("Debug: Connection Successful");
       // Add observer to modbus handler
       modbusHandler.addObserver(ip, dataHandler);
+      dataHandler.mbHandler = modbusHandler;
 
       // Add room data handler to master
       master.addDataHandler(id, dataHandler);
@@ -111,7 +126,10 @@ void main() async {
       print("Debug: Connection Exception - Cannot establish connection with IP address $ip");
     }
   }
-  modbusHandler.startPoll();
+  Timer(Duration(seconds: 5), (){
+    print("CONNECTED");
+    modbusHandler.startPoll();
+  });
 
   runApp(
     MultiProvider(
@@ -133,6 +151,7 @@ class WinApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FluentApp(
       theme: ThemeData(
+
         brightness: Brightness.light,
         accentColor: Colors.blue,
         inactiveColor: Colors.black,

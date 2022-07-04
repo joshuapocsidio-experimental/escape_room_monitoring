@@ -1,41 +1,31 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/hint/HintData.dart';
+import 'package:flutter_windows/model/hint/HintDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
-import '../../../../model/puzzle/PuzzleData.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-import '../../../../model/puzzle/PuzzleDataHandler.dart';
-
-class GameStateDataTable extends StatefulWidget {
-  final PuzzleDataHandler puzzleDataHandler;
-
-  GameStateDataTable({required this.puzzleDataHandler});
+class HintDataTable extends StatefulWidget {
   @override
-  _GameStateDataTableState createState() => _GameStateDataTableState();
+  _HintDataTableState createState() => _HintDataTableState();
 }
 
-class _GameStateDataTableState extends State<GameStateDataTable> {
-  late PuzzleDataSource _puzzleStateDataSource;
+class _HintDataTableState extends State<HintDataTable> {
   late ScrollController _scrollController;
+  late HintDataSource _hintStateDataSource;
   final DataGridController _dataGridController = DataGridController();
 
   @override
   void initState() {
-    _puzzleStateDataSource = widget.puzzleDataHandler.puzzleDataSource;   // Extract all puzzle data from puzzle data handler
-    widget.puzzleDataHandler.addCallback(_refreshTable);                  // Add callback to puzzle data handler
+//    _hintStateDataSource = widget.hintDataHandler.hintDataSource;  // Extract all hint data from hint data handler
     _scrollController = ScrollController();
     super.initState();
   }
 
-  void _refreshTable(){
-    widget.puzzleDataHandler.updateWidgets();
-  }
 
   @override
   Widget build(BuildContext context) {
-    RoomPage.of(context).dataHandler.puzzleDataHandler.puzzleDataSource.context = context;
-    RoomPage.of(context).dataHandler.roomDataHandler.addCallback(_refreshTable);
-    RoomPage.of(context).dataHandler.puzzleDataHandler.addCallback(_refreshTable);
+    _hintStateDataSource = RoomPage.of(context).dataHandler.hintDataHandler.hintDataSource;
     return SfDataGridTheme(
       data: SfDataGridThemeData(
         sortIcon: const Icon(
@@ -49,8 +39,8 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
         headerGridLinesVisibility: GridLinesVisibility.horizontal,
         verticalScrollController: _scrollController,
         headerRowHeight: 30,
+        source: _hintStateDataSource,
         allowSorting: true,
-        source: _puzzleStateDataSource,
         columns: [
           GridColumn(
               columnWidthMode: ColumnWidthMode.fitByColumnName,
@@ -67,13 +57,13 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
                   ))),
           GridColumn(
               columnWidthMode: ColumnWidthMode.fitByCellValue,
-              columnName: 'Stage',
+              columnName: 'Title',
               maximumWidth: 150,
               label: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
                   child: const Text(
-                    'Stage',
+                    'Title',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -94,12 +84,12 @@ class _GameStateDataTableState extends State<GameStateDataTable> {
                   ))),
           GridColumn(
               columnWidthMode: ColumnWidthMode.fitByCellValue,
-              columnName: 'Status',
+              columnName: 'Type',
               label: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomLeft,
                   child: const Text(
-                    'Status',
+                    'Type',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,

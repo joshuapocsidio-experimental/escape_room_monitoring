@@ -1,20 +1,20 @@
-equipRef, equipName, description, onText, offText, ref
-A, Intro Pushbutton, Plays the introduction video, Pressed, Not Pressed, 01
-B, Multi-Notch Controller, Activates manual override, Activated, Deactivated, 04
-C, Multiple Rotary Switches, Activates system override, Activated, Deactivated, 05
-D, Keypad Electromagnet, Holds the keypad door closed, Disengaged, Engaged, 05
-E, Keypad Door Sensor, Detects if keypad door is opened, Activated, Deactivated, 05
-F, Overhead Cabinet Electromagnet, Holds the overhead cabinet door closed, Disengaged, Engaged, 06
-G, Overhead Cabinet Door Sensor, Detects if overhead cabinet door is open or closed, Open, Closed, 06
-H, Test Tube Switch, Activates the hydraulic to lower the test tube table, Activated, Deactivated, 09
-I, Test Tube Linear Actuator, Lowers the test tube table, Activated, Deactivated, 09
-J, Test Tube Limit Switch A, Detects if test tube table has been lowered, Activated, Deactivated, 09
-K, Test Tube Limit Switch B, Detects if test tube table has reached its physical limit, Activated, Deactivated, 09
-L, Antidote Electromagnet, Holds the antidote enclosure door closed, Disengaged, Engaged, 09
-M, Antidote Door Sensor, Detects if antidote door is open or closed, Open, Closed, 09
-N, Lever Door Electromagnet, Holds the lever enclosure door closed, Disengaged, Engaged, 09
-O, Lever Door Sensor, Detects if lever door is open or closed, Open, Closed, 09
-P, Emergency Lever, Activates emergency state, Activated, Deactivated, 11
-Q, Emergency Lighting, Emergency lighting activated and flashes red, Activated, Deactivated, 11
-R, Exit Door Electromagnet, Holds the entry/exit door closed, Disengaged, Engaged, 11
-S, Exit Door Sensor, Detects if entry/exit door is closed, Open, Closed, 11
+equipRef, equipName, description, onText, offText, ref,plc_tag,plc_addr,plc_type,plc_desc
+A, Intro Pushbutton, Plays the introduction video, Pressed, Not Pressed,1,FLRM01_PB001_On_I,%QX1016.1,BOOL,FLRM01 Introduction Video Pushbutton Pressed
+B, Multi-Notch Controller, Activates manual override, Activated, Deactivated,4,FLRM01_MX001_Act_I,%QX1016.4,BOOL,FLRM01 Multiple Notches Activated
+C, Multiple Rotary Switches, Activates system override, Activated, Deactivated,5,FLRM01_SW001_On_I,%QX1016.2,BOOL,FLRM01 Multiple Rotary Switches All On
+D, Keypad Electromagnet, Holds the keypad door closed, Disengaged, Engaged,5,FLRM01_DL001_O,%QX1000.0,BOOL,FLRM01 Keypad Panel Door Electromagnet Lock Disengaged
+E, Keypad Door Sensor, Detects if keypad door is opened, Activated, Deactivated,5,FLRM01_DS001_Cls_I,%QX1015.0,BOOL,FLRM01 Keypad Panel Door Detected Door Closed
+F, Overhead Cabinet Electromagnet, Holds the overhead cabinet door closed, Disengaged, Engaged,6,FLRM01_DL002_O,%QX1000.1,BOOL,FLRM01 Overhead Cabinet Electromagnet Lock Disengaged
+G, Overhead Cabinet Door Sensor, Detects if overhead cabinet door is open or closed, Open, Closed,6,FLRM01_DS002_Cls_I,%QX1015.1,BOOL,FLRM01 Overhead Cabinet Detected Door Closed
+H, Test Tube Switch, Activates the hydraulic to lower the test tube table, Activated, Deactivated,9,FLRM01_SW002_On_I,%QX1016.3,BOOL,FLRM01 Test Tube Table Hydraulic Trigger Push Switch Activated
+I, Test Tube Linear Actuator, Lowers the test tube table, Activated, Deactivated,9,FLRM01_LA001_O,%QX1000.5,BOOL,FLRM01 Test Tube Table Linear Actuator Activated
+J, Test Tube Limit Switch A, Detects if test tube table has been lowered, Activated, Deactivated,9,FLRM01_LS001_Act_I,%QX1015.6,BOOL,FLRM01 Test Tube Table Indicator Limit Switch Activated
+K, Test Tube Limit Switch B, Detects if test tube table has reached its physical limit, Activated, Deactivated,9,FLRM01_LS002_Act_I,%QX1015.7,BOOL,FLRM01 Test Tube Table End of Travel Limit Switch Activated
+L, Antidote Electromagnet, Holds the antidote enclosure door closed, Disengaged, Engaged,9,FLRM01_DL003_O,%QX1000.2,BOOL,FLRM01 Antidote Panel Electromagnet Lock Disengaged
+M, Antidote Door Sensor, Detects if antidote door is open or closed, Open, Closed,9,FLRM01_DS003_Cls_I,%QX1015.2,BOOL,FLRM01 Antidote Panel Detected Door Closed
+N, Lever Door Electromagnet, Holds the lever enclosure door closed, Disengaged, Engaged,9,,,,
+O, Lever Door Sensor, Detects if lever door is open or closed, Open, Closed,9,,,,
+P, Emergency Lever, Activates emergency state, Activated, Deactivated,11,,,,
+Q, Emergency Lighting, Emergency lighting activated and flashes red, Activated, Deactivated,11,,,,
+R, Exit Door Electromagnet, Holds the entry/exit door closed, Disengaged, Engaged,11,,,,
+S, Exit Door Sensor, Detects if entry/exit door is closed, Open, Closed,11,,,,

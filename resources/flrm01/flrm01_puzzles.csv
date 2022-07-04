@@ -1,12 +1,12 @@
-ref,name,description,monitored
-01,Intro,Introduction Video, yes
-02,Hidden Key,Hidden Key to be obtained via magnetic dog tag, no
-03,Gun Box Lock, Solved by entering numeric code obtained via hints along the gun props, no
-04,Manual Override,Solved by sliding notches to correct positions obtained via manual override sheet, yes
-05,System Override,Solved by twisting rotary switches to correct positions, yes
-06,Keypad Stage,Solved via entering numeric codes obtained from manual override sheet and map coordinates, yes
-07,Infrared Frame Clue,Obtain clue via usage of infrared camera pointed at picture frame, no
-08,PC Login Password,Solved by inputting 'chubby' as password to the login screen, yes
-09,Test Tube Antidote,Solved by pushing down correct test tubes to corresponding slots, yes
-10,Bravo Lock,Solved by inputting BRAVO to the lock, no
-11,Emergency Stage,Activated by pulling down lever, yes
+ref,name,description,monitored,rdy_plc_tag,rdy_plc_addr,rdy_plc_type,rdy_plc_desc,prg_plc_tag,prg_plc_addr,prg_plc_type,prg_plc_desc,fin_plc_tag,fin_plc_addr,fin_plc_type,fin_plc_desc,byp_plc_tag,byp_plc_addr,byp_plc_type,byp_plc_desc
+1,Intro,Introduction Video, yes,FLRM01_Stage01Rdy_S,%QX1027.5,BOOL,FLRM01 Stage 01 Ready,FLRM01_Stage01InProg_S,%QX1027.6,BOOL,FLRM01 Stage 01 In Progress,FLRM01_Stage01Fin_S,%QX1027.7,BOOL,FLRM01 Stage 01 Finished,FLRM01_Stage01Byp_S,%QX1028.0,BOOL,FLRM01 Stage 01 Bypassed
+2,Hidden Key,Hidden Key to be obtained via magnetic dog tag, no,FLRM01_Stage02Rdy_S,%QX1028.1,BOOL,FLRM01 Stage 02 Ready,FLRM01_Stage02InProg_S,%QX1028.2,BOOL,FLRM01 Stage 02 In Progress,FLRM01_Stage02Fin_S,%QX1028.3,BOOL,FLRM01 Stage 02 Finished,FLRM01_Stage02Byp_S,%QX1028.4,BOOL,FLRM01 Stage 02 Bypassed
+3,Gun Box Lock, Solved by entering numeric code obtained via hints along the gun props, no,FLRM01_Stage03Rdy_S,%QX1028.5,BOOL,FLRM01 Stage 03 Ready,FLRM01_Stage03InProg_S,%QX1028.6,BOOL,FLRM01 Stage 03 In Progress,FLRM01_Stage03Fin_S,%QX1028.7,BOOL,FLRM01 Stage 03 Finished,FLRM01_Stage03Byp_S,%QX1029.0,BOOL,FLRM01 Stage 03 Bypassed
+4,Manual Override,Solved by sliding notches to correct positions obtained via manual override sheet, yes,FLRM01_Stage04Rdy_S,%QX1029.1,BOOL,FLRM01 Stage 04 Ready,FLRM01_Stage04InProg_S,%QX1029.2,BOOL,FLRM01 Stage 04 In Progress,FLRM01_Stage04Fin_S,%QX1029.3,BOOL,FLRM01 Stage 04 Finished,FLRM01_Stage04Byp_S,%QX1029.4,BOOL,FLRM01 Stage 04 Bypassed
+5,System Override,Solved by twisting rotary switches to correct positions, yes,FLRM01_Stage05Rdy_S,%QX1029.5,BOOL,FLRM01 Stage 05 Ready,FLRM01_Stage05InProg_S,%QX1029.6,BOOL,FLRM01 Stage 05 In Progress,FLRM01_Stage05Fin_S,%QX1029.7,BOOL,FLRM01 Stage 05 Finished,FLRM01_Stage05Byp_S,%QX1030.0,BOOL,FLRM01 Stage 05 Bypassed
+6,Keypad Stage,Solved via entering numeric codes obtained from manual override sheet and map coordinates, yes,FLRM01_Stage06Rdy_S,%QX1030.1,BOOL,FLRM01 Stage 06 Ready,FLRM01_Stage06InProg_S,%QX1030.2,BOOL,FLRM01 Stage 06 In Progress,FLRM01_Stage06Fin_S,%QX1030.3,BOOL,FLRM01 Stage 06 Finished,FLRM01_Stage06Byp_S,%QX1030.4,BOOL,FLRM01 Stage 06 Bypassed
+7,Infrared Frame Clue,Obtain clue via usage of infrared camera pointed at picture frame, no,FLRM01_Stage07Rdy_S,%QX1030.5,BOOL,FLRM01 Stage 07 Ready,FLRM01_Stage07InProg_S,%QX1030.6,BOOL,FLRM01 Stage 07 In Progress,FLRM01_Stage07Fin_S,%QX1030.7,BOOL,FLRM01 Stage 07 Finished,FLRM01_Stage07Byp_S,%QX1031.0,BOOL,FLRM01 Stage 07 Bypassed
+8,PC Login Password,Solved by inputting 'chubby' as password to the login screen, yes,FLRM01_Stage08Rdy_S,%QX1031.1,BOOL,FLRM01 Stage 08 Ready,FLRM01_Stage08InProg_S,%QX1031.2,BOOL,FLRM01 Stage 08 In Progress,FLRM01_Stage08Fin_S,%QX1031.3,BOOL,FLRM01 Stage 08 Finished,FLRM01_Stage08Byp_S,%QX1031.4,BOOL,FLRM01 Stage 08 Bypassed
+9,Test Tube Antidote,Solved by pushing down correct test tubes to corresponding slots, yes,FLRM01_Stage09Rdy_S,%QX1031.5,BOOL,FLRM01 Stage 09 Ready,FLRM01_Stage09InProg_S,%QX1031.6,BOOL,FLRM01 Stage 09 In Progress,FLRM01_Stage09Fin_S,%QX1031.7,BOOL,FLRM01 Stage 09 Finished,FLRM01_Stage09Byp_S,%QX1032.0,BOOL,FLRM01 Stage 09 Bypassed
+10,Bravo Lock,Solved by inputting BRAVO to the lock, no,FLRM01_Stage10Rdy_S,%QX1032.1,BOOL,FLRM01 Stage 10 Ready,FLRM01_Stage10InProg_S,%QX1032.2,BOOL,FLRM01 Stage 10 In Progress,FLRM01_Stage10Fin_S,%QX1032.3,BOOL,FLRM01 Stage 10 Finished,FLRM01_Stage10Byp_S,%QX1032.4,BOOL,FLRM01 Stage 10 Bypassed
+11,Emergency Stage,Activated by pulling down lever, yes,FLRM01_Stage11Rdy_S,%QX1032.5,BOOL,FLRM01 Stage 11 Ready,FLRM01_Stage11InProg_S,%QX1032.6,BOOL,FLRM01 Stage 11 In Progress,FLRM01_Stage11Fin_S,%QX1032.7,BOOL,FLRM01 Stage 11 Finished,FLRM01_Stage11Byp_S,%QX1033.0,BOOL,FLRM01 Stage 11 Bypassed

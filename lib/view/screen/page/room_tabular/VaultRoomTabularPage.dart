@@ -40,17 +40,6 @@ class _VaultRoomTabularPageState extends State<VaultRoomTabularPage> {
             flex: 9,
             child: Column(
               children: [
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, top: 8, bottom: 4, right: 4),
-                    child: RoomTabularSummaryCard(
-                      roomName: widget.roomName,
-                      id: widget.roomID,
-                      color: Colors.yellow,
-                      maxMin: widget.maxTime,
-                    ),
-                  ),
-                ),
                 Expanded(
                   flex: 2,
                   child: Padding(
@@ -62,7 +51,7 @@ class _VaultRoomTabularPageState extends State<VaultRoomTabularPage> {
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8, top: 4, bottom: 8, right: 4),
-                    child: RoomTabularAlarmCard(alertDataHandler: vaultAlertDataHandler,),
+                    child: RoomTabularAlarmCard(),
                   ),
                 ),
               ],
@@ -73,8 +62,6 @@ class _VaultRoomTabularPageState extends State<VaultRoomTabularPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 4, top: 8, bottom: 8, right: 8),
               child: GameStateCard(
-                equipmentDataHandler: VaultEquipmentDataHandler,
-                puzzleDataHandler: VaultPuzzleDataHandler,
               ),
             ),
           ),

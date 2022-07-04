@@ -2,6 +2,7 @@ import 'package:flutter_windows/model/DataObserver.dart';
 import 'package:flutter_windows/model/alert/AttentionAlert.dart';
 import 'package:flutter_windows/model/alert/InfoAlert.dart';
 import 'package:flutter_windows/model/alert/InvalidAlertTypeException.dart';
+import 'package:flutter_windows/model/plc/PLCTagData.dart';
 
 import 'AlarmAlert.dart';
 import 'AlertData.dart';
@@ -29,13 +30,12 @@ class AlertDataHandler extends DataObserver{
       return;
     }
     // Update Map
-    activeAlertMap[id]!.active = activeState;
-    activeAlertMap[id]!.acknowledge = acknowledgeState;
+    AlertData activeAlert = activeAlertMap[id]!;
+    activeAlert.updateState(activeState, acknowledgeState);
     // Update List
     for(AlertData alert in activeAlertList) {
       if(alert.id == id) {
-        alert.active = activeState;
-        alert.acknowledge = acknowledgeState;
+        alert.updateState(activeState, acknowledgeState);
         return;
       }
     }
@@ -180,6 +180,8 @@ class AlertDataHandler extends DataObserver{
 
   void addAlertReference(List<List<String>> alertStringList){
       String alertID, alertName, alertDesc, alertRef, alertType;
+      String plcTag, plcType, plcAddress, plcDescription;
+      String recommendedAction;
 
       for(int i = 0; i <alertStringList.length; i++) {
         List<String> alertString = alertStringList[i];
@@ -190,8 +192,16 @@ class AlertDataHandler extends DataObserver{
         alertDesc = alertString[3];
         alertRef = alertString[4];
 
+        plcTag = alertString[5];
+        plcType = alertString[6];
+        plcAddress = alertString[7];
+        plcDescription = alertString[8];
+        PLCTagData plcTagData = PLCTagData(tag: plcTag, dataType: plcType, tagAddress: plcAddress, description: plcDescription);
+
+        recommendedAction = alertString[9];
+
         try{
-          AlertData newAlert = createAlert(alertID, alertType, alertName, alertDesc, alertRef);
+          AlertData newAlert = createAlert(alertID, alertType, alertName, alertDesc, alertRef, plcTagData, recommendedAction);
           alertReferenceMap[alertID] = newAlert;
           alertReferenceList.add(newAlert);
         }
@@ -202,19 +212,23 @@ class AlertDataHandler extends DataObserver{
   }
 
   /// INITIAL
-  AlertData createAlert(String id, String type, String name, String description, String ref){
+  AlertData createAlert(String id, String type, String name, String description, String ref, PLCTagData plcTagData, String recommendedAction){
     switch(type.toLowerCase()){
       case 'alm':
-        return AlarmAlert(id: id, reference: ref, description: description, title: name, active: false);
+        return AlarmAlert(id: id, reference: ref, description: description, title: name, active: false, plcTagData: plcTagData, recommendedAction: recommendedAction);
       case 'att':
-        return AttentionAlert(id: id, reference: ref, description: description, title: name, active: false);
+        return AttentionAlert(id: id, reference: ref, description: description, title: name, active: false, plcTagData: plcTagData, recommendedAction: recommendedAction);
       case 'wrn':
-        return WarningAlert(id: id, reference: ref, description: description, title: name, active: false);
+        return WarningAlert(id: id, reference: ref, description: description, title: name, active: false, plcTagData: plcTagData, recommendedAction: recommendedAction);
       case 'inf':
-        return InfoAlert(id: id, reference: ref, description: description, title: name, active: false);
+        return InfoAlert(id: id, reference: ref, description: description, title: name, active: false, plcTagData: plcTagData, recommendedAction: recommendedAction);
       default:
         throw InvalidAlertTypeException(message: "InvalidAlertTypeException : Attempted to create an alert with unknown alert type = $id");
     }
+  }
+
+  void processAlertState({required String id, required bool activeState, required bool acknowledgeState}) {
+
   }
 
   @override
@@ -222,4 +236,9 @@ class AlertDataHandler extends DataObserver{
 //    print("Alert Data - Update Data callback");
     super.updateData(data);
   }
+
+  void acknowledge(){
+    
+  }
 }
+

@@ -1,3 +1,5 @@
+import 'package:flutter_windows/model/hint/HintDataHandler.dart';
+
 import '../controller/data/ModbusObserver.dart';
 import 'package:flutter_windows/model/DataObserver.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
@@ -15,10 +17,11 @@ class DataHandler extends ModbusObserver{
   final EquipmentDataHandler equipmentDataHandler;
   final PuzzleDataHandler puzzleDataHandler;
   final RoomDataHandler roomDataHandler;
+  final HintDataHandler hintDataHandler;
 
   final String roomID;
 
-  DataHandler({required this.roomID, required this.actionDataHandler, required this.alertDataHandler, required this.equipmentDataHandler, required this.puzzleDataHandler, required this.roomDataHandler});
+  DataHandler({required this.roomID, required this.actionDataHandler, required this.alertDataHandler, required this.equipmentDataHandler, required this.puzzleDataHandler, required this.roomDataHandler, required this.hintDataHandler});
 
 /// Obtained via Modbus Communication
 /// - Alerts
@@ -33,6 +36,7 @@ class DataHandler extends ModbusObserver{
     equipmentDataHandler.updateData(data);
     puzzleDataHandler.updateData(data);
     alertDataHandler.updateData(data);
+    roomDataHandler.updateData(data);
   }
 
 }

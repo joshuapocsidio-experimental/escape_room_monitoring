@@ -1,4 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
+import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import 'package:flutter_windows/view/widget/room/alert/AlarmDataTable.dart';
 import '../../controller/data/exception/MissingDataHandlerException.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
@@ -29,6 +31,12 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _refreshState() {
+    setState(() {
+      print("Badge");
+    });
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -37,10 +45,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     DataMaster dataMaster = Provider.of<DataMaster>(context);
+    dataMaster.getDataHandler('flrm01').alertDataHandler.addCallback(_refreshState);
 
     return NavigationView(
       appBar: buildNavigationAppBar(),
-      pane: buildNavigationPane(),
+      pane: buildNavigationPane(dataMaster: dataMaster),
       content: buildNavigationBody(
         dataMaster: dataMaster,
       ),
@@ -88,7 +97,13 @@ class _MainScreenState extends State<MainScreen> {
     // Flight Room Escape Room
     try{
       flightRoomData = dataMaster.getDataHandler("flrm01").roomDataHandler.getRoom();
-      navigationWidgets.add(FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime));
+      // navigationWidgets.add(InvalidRoomTabularPage(roomName: "Flight 729 Escape Room"));
+      navigationWidgets.add(
+        RoomPage(
+            dataHandler: dataMaster.getDataHandler('flrm01'),
+            child: FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime),
+        ),
+      );
     }
     on MissingDataHandlerException catch (e) {
       print(e.message);
@@ -114,8 +129,8 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Trends
-    navigationWidgets.add(AlarmDataTable(tableMode: 1, alertDataHandler: dataMaster.getDataHandler('flrm01').alertDataHandler,));
-    // navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Alerts
+//    navigationWidgets.add(AlarmDataTable(tableMode: 1, alertDataHandler: dataMaster.getDataHandler('flrm01').alertDataHandler,));
+    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Alerts
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Handover Notes
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Info Center
     navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Preferences
@@ -129,9 +144,10 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  NavigationPane buildNavigationPane() {
+  NavigationPane buildNavigationPane({required DataMaster dataMaster}) {
     final ScrollController _verticalScrollController = ScrollController();
-
+    AlertDataHandler flightAlertDataHandler = dataMaster.getDataHandler('flrm01').alertDataHandler;
+    int flightNumAlerts = flightAlertDataHandler.activeAlertList.length;
     return NavigationPane(
       scrollController: _verticalScrollController,
       footerItems: [
@@ -161,7 +177,9 @@ class _MainScreenState extends State<MainScreen> {
         PaneItem(
           icon: const Icon(FluentIcons.room),
           title: const Text("Flight 729"),
-          infoBadge: const InfoBadge(source: Text("4"), color: Colors.warningPrimaryColor,)
+          infoBadge: flightNumAlerts != 0 ?
+          InfoBadge(source: Text(flightNumAlerts.toString()), color: Colors.warningPrimaryColor,) :
+          InfoBadge(source: Text(""), color: Colors.transparent,)
         ),
         PaneItem(
           icon: const Icon(FluentIcons.room),

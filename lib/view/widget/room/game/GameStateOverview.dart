@@ -68,148 +68,141 @@ class _GameStateOverviewState extends State<GameStateOverview> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ToggleSwitch(
-                checked: _isChecked,
-                onChanged: toggleGameState,
-                content: Text(_stateType),
+              Expanded(
+                child : ToggleSwitch(
+                  checked: _isChecked,
+                  onChanged: toggleGameState,
+                  content: Text(_stateType),
+                ),
               ),
-              Row(
-                children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
+              Expanded(
+                child : CommandBar(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  primaryItems: [
+                    CommandBarButton(
+                      label: Text('Filter'),
+                      icon: Icon(FluentIcons.filter),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
                           builder: (context){
                             return ContentDialog(
                               title: const Text("Filter"),
                               content: const Text("This is a placeholder and will be replaced once functionality for filter functionality is implemented."),
-                                actions: [
-                                  Button(child: const Text("OK"), onPressed: (){Navigator.pop(context);}),
-                                ],
+                              actions: [
+                                Button(child: const Text("OK"), onPressed: (){Navigator.pop(context);}),
+                              ],
                             );
                           },
-                      );
-                    },
-                    child: const Text(
-                      "Filter",
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
+                        );
+                      },
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 1.0),
-                    child: Divider(),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context){
-                          return ContentDialog(
-                            constraints: const BoxConstraints(maxWidth: 360, maxHeight: 300),
-                            title: const Text("Options"),
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text("Number of box across "),
-                                Combobox<int>(
-                                  placeholder: const Text("Columns"),
-                                  value: _numColumns,
-                                  onChanged: (value){
-                                    setState(() {
-                                      debugPrint(value.toString());
-                                      _numColumns = value;
-                                    });
-                                  },
-                                  items: [
-                                    ComboboxItem<int>(
-                                      onTap: (){
-
+                    CommandBarButton(
+                        label: Text('Options'),
+                        icon: Icon(FluentIcons.settings),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context){
+                              return ContentDialog(
+                                constraints: const BoxConstraints(maxWidth: 360, maxHeight: 300),
+                                title: const Text("Options"),
+                                content: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text("Number of box across "),
+                                    Combobox<int>(
+                                      placeholder: const Text("Columns"),
+                                      value: _numColumns,
+                                      onChanged: (value){
+                                        setState(() {
+                                          debugPrint(value.toString());
+                                          _numColumns = value;
+                                        });
                                       },
-                                      value: 5,
-                                      child: const Text("5"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                      items: [
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 6,
-                                      child: const Text("6"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 5,
+                                          child: const Text("5"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 7,
-                                      child: const Text("7"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 6,
+                                          child: const Text("6"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 8,
-                                      child: const Text("8"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 7,
+                                          child: const Text("7"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 9,
-                                      child: const Text("9"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 8,
+                                          child: const Text("8"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 10,
-                                      child: const Text("10"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 9,
+                                          child: const Text("9"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 11,
-                                      child: const Text("11"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 10,
+                                          child: const Text("10"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 12,
-                                      child: const Text("12"),
-                                    ),
-                                    ComboboxItem<int>(
-                                      onTap: (){
+                                          },
+                                          value: 11,
+                                          child: const Text("11"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
 
-                                      },
-                                      value: 13,
-                                      child: const Text("13"),
+                                          },
+                                          value: 12,
+                                          child: const Text("12"),
+                                        ),
+                                        ComboboxItem<int>(
+                                          onTap: (){
+
+                                          },
+                                          value: 13,
+                                          child: const Text("13"),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            actions: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Button(child: const Text("Confirm"), onPressed: (){Navigator.pop(context);}),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Button(child: const Text("Confirm"), onPressed: (){Navigator.pop(context);}),
+                                    ],
+                                  ),
                                 ],
-                              ),
-                            ],
+                              );
+                            },
                           );
-                        },
-                      );
-                    },
-                    child: const Text(
-                      "Options",
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                ],
+                        }
+                    )
+                  ],
+                ),
               ),
             ],
           ),

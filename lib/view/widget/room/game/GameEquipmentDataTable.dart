@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import '../../../../model/equipment/EquipmentData.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -17,6 +18,7 @@ class GameEquipmentDataTable extends StatefulWidget {
 class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
   late EquipmentDataSource _equipmentStateDataSource;
   late ScrollController _scrollController;
+  final DataGridController _dataGridController = DataGridController();
 
   @override
   void initState() {
@@ -27,12 +29,12 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
   }
 
   void _refreshTable(){
-    _equipmentStateDataSource.updateGridSource();
+    widget.equipmentDataHandler.updateTable();
   }
 
   @override
   Widget build(BuildContext context) {
-
+    RoomPage.of(context).dataHandler.equipmentDataHandler.equipmentDataSource.context = context;
     return SfDataGridTheme(
       data: SfDataGridThemeData(
         sortIcon: const Icon(
@@ -41,20 +43,22 @@ class _GameEquipmentDataTableState extends State<GameEquipmentDataTable> {
         ),
       ),
       child: SfDataGrid(
+        rowHeight: 40,
+        controller: _dataGridController,
         headerGridLinesVisibility: GridLinesVisibility.horizontal,
         verticalScrollController: _scrollController,
         headerRowHeight: 30,
-        allowSorting: true,
         source: _equipmentStateDataSource,
+        allowSorting: true,
         columns: [
           GridColumn(
               columnWidthMode: ColumnWidthMode.fitByColumnName,
-              columnName: 'EquipRef',
+              columnName: 'ID',
               label: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 4),
                   alignment: Alignment.bottomCenter,
                   child: const Text(
-                    'Equip',
+                    'ID',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,

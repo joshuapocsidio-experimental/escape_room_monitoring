@@ -40,6 +40,8 @@ dependencies:
   provider: ^6.0.2
   syncfusion_flutter_datagrid: ^20.1.50
   modbus: ^0.1.2
+  context_menus: ^1.0.1
+  contextmenu: ^3.0.0
 
 dev_dependencies:
   flutter_test:

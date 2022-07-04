@@ -31,8 +31,8 @@ class _RoomOverviewGridViewState extends State<RoomOverviewGridView> {
 
   void _refreshGrid(){
     setState(() {
-      _puzzleStateDataSource.updateGridSource();
-      _equipmentStateDataSource.updateGridSource();
+      widget.puzzleDataHandler.updateWidgets();
+      widget.equipmentDataHandler.updateTable();
     });
   }
   @override

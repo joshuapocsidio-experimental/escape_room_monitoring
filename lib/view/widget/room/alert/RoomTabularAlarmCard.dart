@@ -1,17 +1,22 @@
+import 'dart:async';
+
+import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_windows/model/DataHandler.dart';
+import 'package:flutter_windows/model/alert/AlertData.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
+import 'package:flutter_windows/view/screen/page/RoomPage.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'AlarmDataTable.dart';
 
 class RoomTabularAlarmCard extends StatefulWidget {
-  final AlertDataHandler alertDataHandler;
-
-  RoomTabularAlarmCard({required this.alertDataHandler});
-
   @override
   _RoomTabularAlarmCardState createState() => _RoomTabularAlarmCardState();
 }
 
 class _RoomTabularAlarmCardState extends State<RoomTabularAlarmCard> {
+  final DataGridController _dataGridController = DataGridController();
   int _currentIndex = 1;
   final radioButtons = [
     'All',
@@ -21,14 +26,8 @@ class _RoomTabularAlarmCardState extends State<RoomTabularAlarmCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Acrylic(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      luminosityAlpha: 0,
-      tintAlpha: 0,
-      blurAmount: 500,
-      elevation: 20,
+    DataHandler dataHandler = RoomPage.of(context).dataHandler;
+    return Card(
       child: Column(
         children: [
           Padding(
@@ -45,39 +44,72 @@ class _RoomTabularAlarmCardState extends State<RoomTabularAlarmCard> {
             ),
           ),
           Row(
-            children: List.generate(radioButtons.length, (index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  children: [
-                    RadioButton(
-                      checked: _currentIndex == index,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _currentIndex = index;
-                          widget.alertDataHandler.updateTableMode(_currentIndex);
-                          print("Change To: $index");
-                        });
-                      },
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(radioButtons.length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        RadioButton(
+                          checked: _currentIndex == index,
+                          onChanged: (bool value) {
+                            setState(() {
+                              _currentIndex = index;
+                              dataHandler.alertDataHandler.updateTableMode(_currentIndex);
+                              print("Change To: $index");
+                            });
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        Text(radioButtons[index]),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     ),
-                    SizedBox(width: 10),
-                    Text(radioButtons[index]),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                ),
-              );
-            }),
+                  );
+                }),
+              ),
+               Expanded(
+                 child: CommandBar(
+                   mainAxisAlignment: MainAxisAlignment.end,
+                   primaryItems: [
+                     CommandBarButton(
+                       label: Text('Ack'),
+                       icon: Icon(FluentIcons.check_mark),
+                       onPressed: () async {
+                         print("Ack");
+                         dataHandler.mbHandler.sendCommand('10.0.0.23', 0);
+                         print("Ack End");
+                       },
+                     ),
+                     CommandBarButton(
+                         label: Text('Force'),
+                         icon: Icon(FluentIcons.clear_selection),
+                         onPressed: () {
+                           print("Off");
+                           dataHandler.mbHandler.writeData('10.0.0.23', 0, false);
+                         }
+                     )
+                   ],
+                 ),
+               ),
+            ],
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 4.0),
             child: Divider(),
           ),
-          Expanded(
-            child: AlarmDataTable(
-              alertDataHandler: widget.alertDataHandler,
-              tableMode: _currentIndex,
-            ),
-          ),
+           Expanded(
+             child: ContextMenuOverlay(
+               child: AlarmDataTable(
+                 alertDataHandler: dataHandler.alertDataHandler,
+                 tableMode: _currentIndex,
+                 dataGridController: _dataGridController,
+               ),
+             ),
+           ),
         ],
       ),
     );

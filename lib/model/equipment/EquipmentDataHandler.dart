@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/plc/PLCTagData.dart';
 
 import '../DataObserver.dart';
 import 'EquipmentData.dart';
@@ -28,6 +29,10 @@ class EquipmentDataHandler extends DataObserver{
     equipmentDataMap[id]!.updateState(state);
   }
 
+  void updateTable(){
+    equipmentDataSource.updateGridSource(equipmentDataList);
+  }
+
 
   void addCallback(Function callback){
     if(callbacks.contains(callback) == false){
@@ -43,6 +48,7 @@ class EquipmentDataHandler extends DataObserver{
 
   void addEquipment(List<List<String>> equipmentStringList){
     String equipRef, equipName, equipDesc, onText, offText, ref;
+    String plcTag, plcAddress, plcType, plcDescription;
 
     for(int i = 0; i < equipmentStringList.length; i++){
       List<String> equipmentString = equipmentStringList[i];
@@ -54,15 +60,21 @@ class EquipmentDataHandler extends DataObserver{
       offText = equipmentString[4];
       ref = equipmentString[5];
 
-      EquipmentData newEquipmentData = createEquipment(equipRef, ref, equipName, equipDesc, onText, offText);
+      plcTag = equipmentString[6];
+      plcAddress = equipmentString[7];
+      plcType = equipmentString[8];
+      plcDescription = equipmentString[9];
+      PLCTagData plcTagData = PLCTagData(tag: plcTag, dataType: plcType, tagAddress: plcAddress, description: plcDescription);
+
+      EquipmentData newEquipmentData = createEquipment(equipRef, ref, equipName, equipDesc, onText, offText, plcTagData);
       equipmentDataList.add(newEquipmentData);
       equipmentDataMap[equipRef] = newEquipmentData;
     }
   }
 
   /// INITIAL
-  EquipmentData createEquipment(String equipRef, String ref, String equipName, String equipDesc, String onText, String offText){
-    return EquipmentData(equipReference: equipRef, reference: ref, offText: offText, description: equipDesc, name: equipName, onText: onText);
+  EquipmentData createEquipment(String equipRef, String ref, String equipName, String equipDesc, String onText, String offText, PLCTagData plcTagData){
+    return EquipmentData(equipReference: equipRef, reference: ref, offText: offText, description: equipDesc, name: equipName, onText: onText, plcTagData: plcTagData);
   }
 
 

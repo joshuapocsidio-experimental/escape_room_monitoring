@@ -1,12 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/view/widget/room/control/RoomTabularControlCard.dart';
-import 'package:provider/provider.dart';
-import '../../../../model/DataHandler.dart';
-import '../../../../model/DataMaster.dart';
-import '../../../../model/equipment/EquipmentData.dart';
-import '../../../../model/equipment/EquipmentDataHandler.dart';
-import '../../../../model/puzzle/PuzzleDataHandler.dart';
+import 'package:flutter_windows/view/widget/room/hint/HintTabularCard.dart';
 import '../../../widget/room/game/GameStateCard.dart';
 import '../../../widget/room/alert/RoomTabularAlarmCard.dart';
 import '../../../widget/room/summary/RoomTabularSummaryCard.dart';
@@ -23,60 +17,88 @@ class FlightRoomTabularPage extends StatefulWidget {
 }
 
 class _FlightRoomTabularPageState extends State<FlightRoomTabularPage> {
+  int _controlTabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void updateControlTabIndex(int index) {
+    setState(() {
+      _controlTabIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    DataMaster master = Provider.of<DataMaster>(context);
-    DataHandler handler = master.getDataHandler("flrm01");
-
-    EquipmentDataHandler flightEquipmentDataHandler = handler.equipmentDataHandler;
-    PuzzleDataHandler flightPuzzleDataHandler = handler.puzzleDataHandler;
-    AlertDataHandler flightAlertDataHandler = handler.alertDataHandler;
-
     return Container(
-      color: Colors.grey.withAlpha(10),
-      child: Row(
+      color: Colors.grey.withAlpha(30),
+      child: Column(
         children: [
           Expanded(
-            flex: 9,
-            child: Column(
+            flex: 7,
+            child: Row(
               children: [
-                Container(
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, top: 8, bottom: 4, right: 4),
+                        child: RoomTabularSummaryCard(),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8, top: 8, bottom: 4, right: 4),
+                          child: TabView(
+                            closeButtonVisibility: CloseButtonVisibilityMode.never,
+                            onChanged: updateControlTabIndex,
+                            tabs: const [
+                              Tab(
+                                text: Text('Hints Panel'),
+                                icon: Icon(FluentIcons.hint_text),
+                              ),
+                              Tab(
+                                text: Text('Game Log'),
+                                icon: Icon(FluentIcons.game),
+                              ),
+                              Tab(
+                                text: Text('Control Log'),
+                                icon: Icon(FluentIcons.admin_c_logo_inverse32),
+                              ),
+                            ],
+                            bodies: [
+                              HintTabularCard(),
+                              HintTabularCard(),
+                              RoomTabularControlCard(),
+                            ],
+                            currentIndex: _controlTabIndex,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8, top: 8, bottom: 4, right: 4),
-                    child: RoomTabularSummaryCard(
-                      roomName: widget.roomName,
-                      id: widget.roomID,
-                      color: Colors.yellow,
-                      maxMin: widget.maxTime,
+                    padding: const EdgeInsets.only(left: 4, top: 8, bottom: 8, right: 8),
+                    child: GameStateCard(
                     ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, top: 4, bottom: 4, right: 4),
-                    child: RoomTabularControlCard(),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, top: 4, bottom: 8, right: 4),
-                    child: RoomTabularAlarmCard(alertDataHandler: flightAlertDataHandler,),
                   ),
                 ),
               ],
             ),
           ),
           Expanded(
-            flex: 10,
+            flex: 2,
             child: Padding(
-              padding: const EdgeInsets.only(left: 4, top: 8, bottom: 8, right: 8),
-              child: GameStateCard(
-                equipmentDataHandler: flightEquipmentDataHandler,
-                puzzleDataHandler: flightPuzzleDataHandler,
-              ),
+              padding: const EdgeInsets.only(left: 8, top: 4, bottom: 8, right: 4),
+              child:
+              RoomTabularAlarmCard(),
             ),
           ),
         ],

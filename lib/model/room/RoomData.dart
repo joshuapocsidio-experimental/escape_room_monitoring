@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/room/MediaData.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 enum RoomState{
@@ -22,12 +23,21 @@ class RoomData{
   late String curTime;
   late int progress;
 
-  RoomData({required this.name, required this.id, required this.ip, required this.maxTime}) {
+  late bool running;
+  late bool isAudioPlaying;
+  late bool isVideoPlaying;
+
+  RoomData({required this.name, required this.id, required this.ip, required this.maxTime,
+  }) {
     this.state = RoomState.Disconnected;
     this.stateText = "Disconnected";
     this.remTime = maxTime;
     this.curTime = '00:00';
     this.progress = 0;
+    this.running = false;
+
+    isAudioPlaying = false;
+    isVideoPlaying = false;
   }
 
   void checkState() {

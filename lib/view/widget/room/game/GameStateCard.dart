@@ -1,16 +1,14 @@
+import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/DataHandler.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
+import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import 'package:flutter_windows/view/widget/room/game/GameStateOverview.dart';
 import '../../../../model/puzzle/PuzzleDataHandler.dart';
 import 'GameEquipmentDataTable.dart';
 import 'GameStateDataTable.dart';
 
 class GameStateCard extends StatefulWidget {
-  late final EquipmentDataHandler equipmentDataHandler;
-  late final PuzzleDataHandler puzzleDataHandler;
-
-  GameStateCard({required this.equipmentDataHandler, required this.puzzleDataHandler});
-
   @override
   _GameStateCardState createState() => _GameStateCardState();
 }
@@ -18,7 +16,7 @@ class GameStateCard extends StatefulWidget {
 class _GameStateCardState extends State<GameStateCard> {
   bool _isChecked = false;
   String _stateType = "Puzzles";
-  late Widget _dataTable, _puzzleDataTable, _equipDataTable;
+
 
   void toggleGameState(bool state){
     setState(() {
@@ -44,23 +42,17 @@ class _GameStateCardState extends State<GameStateCard> {
   }
   @override
   Widget build(BuildContext context) {
-    return Acrylic(
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    luminosityAlpha: 0,
-    tintAlpha: 0,
-    blurAmount: 500,
-    elevation: 20,
+    DataHandler dataHandler = RoomPage.of(context).dataHandler;
+    return Card(
       child: Column(
         children: [
           Expanded(
+            flex: 1,
             child: GameStateOverview(
-              puzzleDataHandler: widget.puzzleDataHandler,
-              equipmentDataHandler: widget.equipmentDataHandler,
+              puzzleDataHandler: dataHandler.puzzleDataHandler,
+              equipmentDataHandler: dataHandler.equipmentDataHandler,
             ),
           ),
-          const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Container(
@@ -74,9 +66,16 @@ class _GameStateCardState extends State<GameStateCard> {
               ),
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Divider(),
+          ),
           Expanded(
-            flex: 2,
-            child: _isChecked == false ? GameStateDataTable(puzzleDataHandler: widget.puzzleDataHandler) : GameEquipmentDataTable(equipmentDataHandler: widget.equipmentDataHandler),
+            flex: 1,
+            child: ContextMenuOverlay(
+              child: _isChecked == false
+                  ? GameStateDataTable(puzzleDataHandler: dataHandler.puzzleDataHandler)
+                  : GameEquipmentDataTable(equipmentDataHandler: dataHandler.equipmentDataHandler)),
           ),
         ],
       ),

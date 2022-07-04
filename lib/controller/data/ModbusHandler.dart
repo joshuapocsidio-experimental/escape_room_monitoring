@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:modbus/modbus.dart' as modbus;
 import 'package:modbus/modbus.dart';
@@ -103,6 +104,19 @@ class MBHandler with ChangeNotifier{
     }
     return []; // TODO: Handle Exceptions
   }
+  // Write Data
+  void writeData(String ipAddress, int address, bool state) async {
+    connectionMap[ipAddress]!.write(address, state);
+  }
+
+  // Send Commands - These are typically one-shot type and should reset after 1x scan time
+  void sendCommand(String ipAddress, int address) async {
+    connectionMap[ipAddress]!.write(address, true);
+    // Wait for a full scan rate
+    Timer(Duration(milliseconds: pollRate), (){
+      connectionMap[ipAddress]!.write(address, false);
+    });
+  }
 
 }
 
@@ -176,7 +190,6 @@ class _MBConnection{
     discreteInputs = await _readDiscreteInputs();
 //    inputRegisters = await _readInputRegisters(); // TODO
 
-
 //    notifyDataObservers(coils); // TODO
     notifyDataObservers(discreteInputs);
 //    notifyDataObservers(inputRegisters); // TODO
@@ -184,11 +197,10 @@ class _MBConnection{
   }
 
   // Write Output Registers
-  void write() async {
+  void write(int address, bool state) async {
     // TODO
+    await client.writeSingleCoil(address, state);
   }
-
-
 
   /// Read Functions
   Future<List<int>> _readInputRegisters() async {
@@ -249,6 +261,11 @@ class _MBConnection{
       print("Debug: Please report this exception and handle accordingly.");
       return List.filled(discreteInputReadSize, false);
     }
+  }
+
+  /// WRITE TEST
+  Future<void> _write(int address, bool state) async {
+    await client.writeSingleCoil(address, state);
   }
 
   /// Write Functions

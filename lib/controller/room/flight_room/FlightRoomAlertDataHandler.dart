@@ -28,6 +28,8 @@ class FlightRoomAlertDataHandler extends AlertDataHandler{
   late bool FLRM01_Stage09Flt_A;
   late bool FLRM01_Stage10Flt_A;
   late bool FLRM01_Stage11Flt_A;
+  // Alert Ack
+  late bool FLRM01_AlertAck_S;
 
   @override
   void updateData(List<bool> data) {
@@ -44,10 +46,11 @@ class FlightRoomAlertDataHandler extends AlertDataHandler{
     FLRM01_Stage09Flt_A = data[458]; // Test Tube Table Stage
     FLRM01_Stage10Flt_A = data[459]; // NOT USED
     FLRM01_Stage11Flt_A = data[460]; // Emergency Stage
-    _processAlertState(id: '20', activeState: FLRM01_Stage06Flt_A, acknowledgeState: true);
-    _processAlertState(id: '21', activeState: FLRM01_Stage08Flt_A, acknowledgeState: true);
-    _processAlertState(id: '22', activeState: FLRM01_Stage09Flt_A, acknowledgeState: true);
-    _processAlertState(id: '23', activeState: FLRM01_Stage11Flt_A, acknowledgeState: true);
+    FLRM01_AlertAck_S = data[215]; // Alert Acknowledge
+    processAlertState(id: '20', activeState: FLRM01_Stage06Flt_A, acknowledgeState: FLRM01_AlertAck_S);
+    processAlertState(id: '21', activeState: FLRM01_Stage08Flt_A, acknowledgeState: FLRM01_AlertAck_S);
+    processAlertState(id: '22', activeState: FLRM01_Stage09Flt_A, acknowledgeState: FLRM01_AlertAck_S);
+    processAlertState(id: '23', activeState: FLRM01_Stage11Flt_A, acknowledgeState: FLRM01_AlertAck_S);
 
     // Only update GUI if any data change detected
     if(changesMade == true) {
@@ -57,7 +60,8 @@ class FlightRoomAlertDataHandler extends AlertDataHandler{
     changesMade = false;
   }
 
-  void _processAlertState({required String id, required bool activeState, required bool acknowledgeState}){
+  @override
+  void processAlertState({required String id, required bool activeState, required bool acknowledgeState}){
     bool alertExists = doesActiveAlertEntryExist(id);
     // Check if alert state doesn't exist in active alert list/map
     if(alertExists == false && activeState == true) {
@@ -82,10 +86,13 @@ class FlightRoomAlertDataHandler extends AlertDataHandler{
       if(acknowledgeState != existingAlert.acknowledge) {
         changesMade = true;
       }
-      // Update Alert States
-      super.updateAlertState(id, activeState, acknowledgeState);
-      // Perform acknowledge checks
-      super.performAcknowledgeCheck(id);
+      // If changes are made, call individual alert callbacks
+      if(changesMade == true) {
+        // Update Alert States
+        super.updateAlertState(id, activeState, acknowledgeState);
+        // Perform acknowledge checks
+        super.performAcknowledgeCheck(id);
+      }
     }
 
 

@@ -90,6 +90,12 @@ class FlightRoomPuzzleDataHandler extends PuzzleDataHandler{
         isBypassed: isBypassed,
         inProgress: inProgress,
       );
+
+      for(PuzzleData data in puzzleDataList)  {
+        if(data.reference == id) {
+          data.updateState(isCompleted: completionState, inProgress: inProgress, isBypassed: isBypassed);
+        }
+      }
     }
   }
 }
