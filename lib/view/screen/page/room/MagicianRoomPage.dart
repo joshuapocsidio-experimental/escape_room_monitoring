@@ -7,7 +7,7 @@ import '../../../../model/DataHandler.dart';
 import '../../../../model/DataMaster.dart';
 import '../../../../model/equipment/EquipmentDataHandler.dart';
 import '../../../../model/stage/StageDataHandler.dart';
-import '../../../widget/room/alert/RoomAlarmCard.dart';
+import '../../../widget/room/alert/RoomAlertCard.dart';
 import '../../../widget/room/game/GameStateCard.dart';
 
 class MagicianRoomPage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _MagicianRoomPageState extends State<MagicianRoomPage> {
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8, top: 4, bottom: 8, right: 4),
-                    child: RoomAlarmCard(),
+                    child: RoomAlertCard(),
                   ),
                 ),
               ],

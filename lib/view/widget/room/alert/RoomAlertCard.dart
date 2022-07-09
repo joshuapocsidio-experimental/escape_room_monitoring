@@ -7,22 +7,16 @@ import 'package:flutter_windows/model/DataHandler.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-import 'AlarmDataTable.dart';
+import 'AlertDataTable.dart';
 
-class RoomAlarmCard extends StatefulWidget {
+class RoomAlertCard extends StatefulWidget {
   @override
-  _RoomAlarmCardState createState() => _RoomAlarmCardState();
+  _RoomAlertCardState createState() => _RoomAlertCardState();
 }
 
-class _RoomAlarmCardState extends State<RoomAlarmCard> {
+class _RoomAlertCardState extends State<RoomAlertCard> {
   bool ackEnable = true;
   final DataGridController _dataGridController = DataGridController();
-
-  void toggleAckButtonEnable() {
-    setState(() {
-      ackEnable = !ackEnable;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +36,17 @@ class _RoomAlarmCardState extends State<RoomAlarmCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             primaryItems: [
               CommandBarButton(
-                label: Text('Ack'),
+                label: Text('Acknowledge'),
                 icon: Icon(FluentIcons.check_mark),
                 onPressed: () async {
                   dataHandler.mbHandler.sendCommand('10.0.0.23', 0);
                   dataHandler.alertDataHandler.acknowledgeAll();
-                  toggleAckButtonEnable();
-                  Timer(Duration(seconds: 1), (){
-                    print("Ack");
-                    print("Ack End");
-                  });
-                  toggleAckButtonEnable();
                 },
               ),
               CommandBarButton(
-                  label: Text('Force'),
+                  label: Text('Clear'),
                   icon: Icon(FluentIcons.clear_selection),
                   onPressed: () {
-                    print("Off");
-                    dataHandler.mbHandler.writeData('10.0.0.23', 0, false);
                   }
               )
             ],
@@ -71,7 +57,7 @@ class _RoomAlarmCardState extends State<RoomAlarmCard> {
           ),
            Expanded(
              child: ContextMenuOverlay(
-               child: AlarmDataTable(
+               child: AlertDataTable(
                  alertDataHandler: dataHandler.alertDataHandler,
                  dataGridController: _dataGridController,
                ),

@@ -6,16 +6,16 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../../../model/alert/AlertData.dart';
 
-class AlarmDataTable extends StatefulWidget {
+class AlertDataTable extends StatefulWidget {
   final AlertDataHandler alertDataHandler;
   final DataGridController dataGridController;
 
-  AlarmDataTable({required this.alertDataHandler, required this.dataGridController});
+  AlertDataTable({required this.alertDataHandler, required this.dataGridController});
   @override
-  _AlarmDataTableState createState() => _AlarmDataTableState();
+  _AlertDataTableState createState() => _AlertDataTableState();
 }
 
-class _AlarmDataTableState extends State<AlarmDataTable> {
+class _AlertDataTableState extends State<AlertDataTable> {
   late AlertDataSource _alertDataSource;
   late ScrollController _scrollController;
   late AlertDataHandler _alertDataHandler;
