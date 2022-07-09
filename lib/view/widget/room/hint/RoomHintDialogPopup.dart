@@ -14,6 +14,8 @@ class RoomHintDialogPopup extends StatefulWidget {
 }
 
 class _RoomHintDialogPopupState extends State<RoomHintDialogPopup> {
+  late HintDataHandler _hintDataHandler;
+
   @override
   Widget build(BuildContext context) {
     _hintDataHandler = RoomPage.of(widget.parentContext).dataHandler.hintDataHandler;
