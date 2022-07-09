@@ -1,13 +1,12 @@
-import 'package:flutter_windows/model/hint/HintDataHandler.dart';
-
-import '../controller/data/ModbusObserver.dart';
-import 'package:flutter_windows/model/DataObserver.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
-import 'package:flutter_windows/model/puzzle/PuzzleDataHandler.dart';
-import 'package:flutter_windows/model/room/RoomDataHandler.dart';
+import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
+import 'package:flutter_windows/model/hint/HintDataHandler.dart';
+import 'package:flutter_windows/model/room/GameDataHandler.dart';
+import 'package:flutter_windows/model/stage/StageDataHandler.dart';
 
 import '../controller/data/ModbusHandler.dart';
+import '../controller/data/ModbusObserver.dart';
 import 'action/ActionDataHandler.dart';
 
 class DataHandler extends ModbusObserver{
@@ -15,13 +14,23 @@ class DataHandler extends ModbusObserver{
   final ActionDataHandler actionDataHandler;
   final AlertDataHandler alertDataHandler;
   final EquipmentDataHandler equipmentDataHandler;
-  final PuzzleDataHandler puzzleDataHandler;
-  final RoomDataHandler roomDataHandler;
+  final StageDataHandler stageDataHandler;
+  final GameDataHandler gameDataHandler;
   final HintDataHandler hintDataHandler;
+  final GameControlDataHandler gameControlDataHandler;
 
   final String roomID;
 
-  DataHandler({required this.roomID, required this.actionDataHandler, required this.alertDataHandler, required this.equipmentDataHandler, required this.puzzleDataHandler, required this.roomDataHandler, required this.hintDataHandler});
+  DataHandler({
+    required this.roomID,
+    required this.actionDataHandler,
+    required this.alertDataHandler,
+    required this.equipmentDataHandler,
+    required this.stageDataHandler,
+    required this.gameDataHandler,
+    required this.hintDataHandler,
+    required this.gameControlDataHandler,
+  });
 
 /// Obtained via Modbus Communication
 /// - Alerts
@@ -30,13 +39,12 @@ class DataHandler extends ModbusObserver{
 /// - Room state
 
   @override
-  void update(List<bool> data) {
-    super.update(data);
+  void update(List<bool> bits, List<int> registers) {
+    super.update(bits, registers);
 
-    equipmentDataHandler.updateData(data);
-    puzzleDataHandler.updateData(data);
-    alertDataHandler.updateData(data);
-    roomDataHandler.updateData(data);
+    equipmentDataHandler.readData(bits, registers);
+    stageDataHandler.readData(bits, registers);
+    alertDataHandler.readData(bits, registers);
+    gameDataHandler.readData(bits, registers);
   }
-
 }

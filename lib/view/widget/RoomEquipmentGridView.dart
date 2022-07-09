@@ -1,6 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/model/equipment/EquipmentData.dart';
-import 'room/overview/RoomOverviewStageCard.dart';
 
 class RoomEquipmentGridView extends StatefulWidget {
   final List<Widget> equipmentBoxes;

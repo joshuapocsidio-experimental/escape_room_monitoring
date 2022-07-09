@@ -1,19 +1,15 @@
 
+import 'dart:async';
+
 import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/DataNotifier.dart';
 import 'package:flutter_windows/model/plc/PLCTagData.dart';
 import 'package:flutter_windows/view/widget/plc/PLCTagDataPopup.dart';
 import 'package:flutter_windows/view/widget/room/alert/AlertDetailsPopup.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-final Map<String, Color> _priorityColorMap = {
-  "1 - Alarm" : Colors.red,
-  "2 - Attention" : Colors.red,
-  "3 - Warning" : Colors.orange,
-  "4 - Info" : Colors.blue,
-};
-
-class AlertData{
+class AlertData extends DataNotifier{
   final String id;
   final String title;
   final String description;
@@ -49,12 +45,7 @@ class AlertData{
     }
   }
 
-  void updateState(bool activeState, bool acknowledgeState){
-    // Detect if transitioning from inactive to active state
-    bool activated = false;
-    if(active == false && activeState == true){
-      activated = true;
-    }
+  void updateState(bool activeState){
     // Always update alarm active state
     active = activeState;
 
@@ -64,14 +55,14 @@ class AlertData{
     }
 
     // If alarm is active, update acknowledge state with user input
-    if(active == true) {
-      acknowledge = acknowledgeState;
-
-      if(activated == true) {
-        timeString = getNowTimeString();
-      }
+    if(activeState == true) {
+      timeString = getNowTimeString();
     }
-    notifyListeners();
+    super.notifyCallbacks();
+  }
+
+  void updateAcknowledge(bool acknowledgeState) {
+    acknowledge = acknowledgeState;
   }
 
   String getNowTimeString(){
@@ -95,20 +86,6 @@ class AlertData{
       recommendedAction: recommendedAction,
     );
   }
-  // TODO : TEST
-  List<Function> callbacks = [];
-  void addCallback(Function callback) {
-    callbacks.add(callback);
-  }
-  void removeCallback(Function callback) {
-    callbacks.remove(callback);
-  }
-  void notifyListeners() {
-    for(Function callback in callbacks) {
-      callback();
-    }
-    print("CALLBACK ALERT");
-  }
 }
 
 
@@ -124,9 +101,8 @@ class AlertDataSource extends DataGridSource{
   }
 
   void initDataGridRows(List<AlertData> alerts){
-    this.alertList = alerts;
-
-    dataGridRows = this.alertList
+    alertList = alerts;
+    dataGridRows = alertList
         .map<DataGridRow>((dataGridRow) {
           return AlertDataGridRow(
             cells: [
@@ -135,17 +111,36 @@ class AlertDataSource extends DataGridSource{
               DataGridCell<String>(columnName: 'Description', value: dataGridRow.description),
               DataGridCell<String>(columnName: 'Priority', value: dataGridRow.alertText),
               DataGridCell<String>(columnName: 'Ref', value: dataGridRow.reference),
+              DataGridCell<String>(columnName: 'Status', value: dataGridRow.active == true ? "Active" : "Inactive"),
+              DataGridCell<String>(columnName: 'Acknowledge', value: dataGridRow.active == false ? "-" : dataGridRow.acknowledge == true ? "Yes" : "No"),
             ],
             alertData: dataGridRow,
           );
         }
       ).toList();
+    if(isAnimating == false) _periodicCallback();
+  }
 
+  Color rowColor = Colors.white;
+  bool isAnimating = false;
+  void _periodicCallback() {
+    Timer.periodic(const Duration(milliseconds: 750), (timer){
+      isAnimating = true;
+      if(rowColor == Colors.white) {
+        rowColor = const Color.fromARGB(255, 255, 100, 100);
+      }
+      else {
+        rowColor = Colors.white;
+      }
+      // print("System Debug: Active alert blinking color updated");
+      notifyListeners();
+    });
   }
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     AlertData alertData = alertList[dataGridRows.indexOf(row)];
+
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
           return ContextMenuRegion(
@@ -153,7 +148,7 @@ class AlertDataSource extends DataGridSource{
               buttonConfigs: [
                 ContextMenuButtonConfig(
                   "See Alert Details",
-                  icon: Icon(FluentIcons.apps_content),
+                  icon: const Icon(FluentIcons.apps_content),
                   onPressed: () {
 
                     showDialog(
@@ -166,7 +161,7 @@ class AlertDataSource extends DataGridSource{
                 ),
                 ContextMenuButtonConfig(
                   "See PLC Data",
-                  icon: Icon(FluentIcons.communication_details),
+                  icon: const Icon(FluentIcons.communication_details),
                   onPressed: () {
 
                     showDialog(
@@ -179,7 +174,7 @@ class AlertDataSource extends DataGridSource{
                 ),
                 ContextMenuButtonConfig(
                   "Clear Alert",
-                  icon: Icon(FluentIcons.clear_formatting_eraser),
+                  icon: const Icon(FluentIcons.clear_formatting_eraser),
                   onPressed: () {
 
                   },
@@ -187,19 +182,21 @@ class AlertDataSource extends DataGridSource{
               ],
             ),
             child: Container(
-              color: Colors.transparent,
+              color: alertData.active == true && alertData.acknowledge == false ? rowColor : alertData.active == true && alertData.acknowledge == true ? const Color.fromARGB(255, 255, 100, 100) : Colors.white,
                 alignment: (dataGridCell.columnName == 'Ref' ||
-                    dataGridCell.columnName == 'Time')
+                    dataGridCell.columnName == 'Time'||
+                    dataGridCell.columnName == 'Status'||
+                    dataGridCell.columnName == 'Acknowledge')
                     ? Alignment.center
                     : Alignment.centerLeft,
-                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Text(
                     dataGridCell.value.toString(),
                     maxLines: dataGridCell.columnName == 'Title' || dataGridCell.columnName == 'Description' ? 2 : 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
-                      color: dataGridCell.columnName == "Priority" ? _priorityColorMap[dataGridCell.value] : Colors.black,
+                      color: Colors.black,
                     ),
                 ),
             ),
@@ -210,16 +207,15 @@ class AlertDataSource extends DataGridSource{
   void updateGridSource(List<AlertData> alerts){
     initDataGridRows(alerts);
     notifyListeners();
-    print("UPDATE");
+    // print("System Debug: AlertData - Update Grid Source");
   }
 
   @override
   List<DataGridRow> get rows => dataGridRows;
-
 }
 
 class AlertDataGridRow extends DataGridRow{
   final AlertData alertData;
   AlertDataGridRow({required List<DataGridCell> cells, required this.alertData}) : super(cells: cells);
-
 }
+

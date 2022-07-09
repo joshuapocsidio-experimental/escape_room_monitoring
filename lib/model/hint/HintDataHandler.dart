@@ -1,7 +1,7 @@
-import 'package:flutter_windows/model/DataObserver.dart';
+import 'package:flutter_windows/model/DataNotifier.dart';
 import 'package:flutter_windows/model/hint/HintData.dart';
 
-class HintDataHandler extends DataObserver {
+class HintDataHandler extends DataNotifier {
   // Data Source
   late final HintDataSource hintDataSource;
 

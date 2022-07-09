@@ -1,12 +1,11 @@
 import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/model/DataHandler.dart';
-import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import 'package:flutter_windows/view/widget/room/game/GameStateOverview.dart';
-import '../../../../model/puzzle/PuzzleDataHandler.dart';
-import 'GameEquipmentDataTable.dart';
-import 'GameStateDataTable.dart';
+
+import 'equipment/EquipmentDataTable.dart';
+import 'stage/StageDataTable.dart';
 
 class GameStateCard extends StatefulWidget {
   @override
@@ -15,7 +14,7 @@ class GameStateCard extends StatefulWidget {
 
 class _GameStateCardState extends State<GameStateCard> {
   bool _isChecked = false;
-  String _stateType = "Puzzles";
+  String _stateType = "Stages";
 
 
   void toggleGameState(bool state){
@@ -23,11 +22,9 @@ class _GameStateCardState extends State<GameStateCard> {
       _isChecked = state;
       if(_isChecked == true) {
         _stateType = "Devices";
-//        _dataTable = _equipDataTable;
       }
       else {
-        _stateType = "Puzzles";
-//        _dataTable = _puzzleDataTable;
+        _stateType = "Stages";
       }
 
     });
@@ -35,9 +32,6 @@ class _GameStateCardState extends State<GameStateCard> {
 
   @override
   void initState() {
-//    _puzzleDataTable = GameStateDataTable(puzzleDataHandler: widget.puzzleDataHandler);
-//    _equipDataTable = GameEquipmentDataTable(equipmentDataHandler: widget.equipmentDataHandler);
-//    _dataTable = _puzzleDataTable;
     super.initState();
   }
   @override
@@ -49,33 +43,31 @@ class _GameStateCardState extends State<GameStateCard> {
           Expanded(
             flex: 1,
             child: GameStateOverview(
-              puzzleDataHandler: dataHandler.puzzleDataHandler,
+              puzzleDataHandler: dataHandler.stageDataHandler,
               equipmentDataHandler: dataHandler.equipmentDataHandler,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Container(
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: ToggleSwitch(
-                  checked: _isChecked,
-                  onChanged: toggleGameState,
-                  content: Text(_stateType),
-                ),
-              ),
             ),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Divider(),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: ToggleSwitch(
+                checked: _isChecked,
+                onChanged: toggleGameState,
+                content: Text(_stateType),
+              ),
+            ),
+          ),
           Expanded(
             flex: 1,
             child: ContextMenuOverlay(
               child: _isChecked == false
-                  ? GameStateDataTable(puzzleDataHandler: dataHandler.puzzleDataHandler)
-                  : GameEquipmentDataTable(equipmentDataHandler: dataHandler.equipmentDataHandler)),
+                  ? StageDataTable(puzzleDataHandler: dataHandler.stageDataHandler)
+                  : EquipmentDataTable(equipmentDataHandler: dataHandler.equipmentDataHandler)),
           ),
         ],
       ),
@@ -88,7 +80,7 @@ class InvalidGameStateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: const Center(
-        child: Text("Could not load data handlers for puzzles and devices."),
+        child: Text("Could not load data handlers for stages and devices."),
       ),
     );
   }

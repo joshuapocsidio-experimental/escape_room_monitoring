@@ -1,12 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
-import 'package:flutter_windows/model/puzzle/PuzzleDataHandler.dart';
-import 'package:flutter_windows/view/widget/RoomEquipmentGridView.dart';
-import 'package:flutter_windows/view/widget/room/overview/RoomOverviewGridView.dart';
-import '../overview/RoomOverviewStageCard.dart';
+import 'package:flutter_windows/model/stage/StageDataHandler.dart';
+
+import '../overview/SiteOverviewGridView.dart';
 
 class GameStateOverview extends StatefulWidget {
-  final PuzzleDataHandler puzzleDataHandler;
+  final StageDataHandler puzzleDataHandler;
   final EquipmentDataHandler equipmentDataHandler;
 
   GameStateOverview({required this.puzzleDataHandler, required this.equipmentDataHandler});
@@ -17,18 +16,18 @@ class GameStateOverview extends StatefulWidget {
 
 class _GameStateOverviewState extends State<GameStateOverview> {
   bool _isChecked = false;
-  String _stateType = "Puzzles";
+  String _stateType = "Stages";
   int? _numColumns = 10;
 
   void toggleGameState(bool state){
     setState(() {
       if(_isChecked == false) {
         _isChecked = true;
-        _stateType = "Physical";
+        _stateType = "Equipment";
       }
       else {
         _isChecked = false;
-        _stateType = "Puzzles";
+        _stateType = "Stages";
       }
 
     });
@@ -211,11 +210,11 @@ class _GameStateOverviewState extends State<GameStateOverview> {
           flex: 1,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: RoomOverviewGridView(
+            child: SiteOverviewGridView(
               toggle: _isChecked,
               numColumns: _numColumns!,
               equipmentDataHandler: widget.equipmentDataHandler,
-              puzzleDataHandler: widget.puzzleDataHandler,
+              stageDataHandler: widget.puzzleDataHandler,
             ),
           ),
         ),

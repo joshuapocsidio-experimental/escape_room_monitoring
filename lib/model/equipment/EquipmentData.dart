@@ -1,14 +1,15 @@
 import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/DataNotifier.dart';
 import 'package:flutter_windows/model/plc/PLCTagData.dart';
 import 'package:flutter_windows/view/widget/plc/PLCTagDataPopup.dart';
-import 'package:flutter_windows/view/widget/room/game/EquipmentDetailsPopup.dart';
+import 'package:flutter_windows/view/widget/room/game/equipment/EquipmentDetailsPopup.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 final Map<String, Color> EquipmentStatusContainerColorMap = {};
 final Map<String, Color> EquipmentStatusTextColorMap = {};
 
-class EquipmentData{
+class EquipmentData extends DataNotifier{
   final String reference;
   final String equipReference;
   final String name;
@@ -47,7 +48,7 @@ class EquipmentData{
         stateText = offText;
         break;
     }
-    notifyListeners();
+    super.notifyCallbacks();
   }
 
   void updateFaulted(bool faulted) {
@@ -60,20 +61,6 @@ class EquipmentData{
       case false:
 //        stateText = offText;
         break;
-    }
-  }
-
-  // TODO : TEST
-  List<Function> callbacks = [];
-  void addCallback(Function callback) {
-    callbacks.add(callback);
-  }
-  void removeCallback(Function callback) {
-    callbacks.remove(callback);
-  }
-  void notifyListeners() {
-    for(Function callback in callbacks) {
-      callback();
     }
   }
 }

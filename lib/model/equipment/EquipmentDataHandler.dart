@@ -1,18 +1,18 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/model/plc/PLCTagData.dart';
 
-import '../DataObserver.dart';
+import '../DataNotifier.dart';
 import 'EquipmentData.dart';
 
 // TODO : Turn this into an abstract class
-class EquipmentDataHandler extends DataObserver{
+abstract class EquipmentDataHandler extends DataNotifier{
+  // Update Data
+  void readData(List<bool> digitalInputs, List<int> analogInputs);
+
   // Data Source
   late final EquipmentDataSource equipmentDataSource;
-
+  // Data list and map
   final List<EquipmentData> equipmentDataList = [];
   final Map<String, EquipmentData> equipmentDataMap = {};
-
-  final List<Function> callbacks = [];
 
   void updateStateByRef(String id, bool state) {
     _updateState(id, state);
@@ -31,19 +31,6 @@ class EquipmentDataHandler extends DataObserver{
 
   void updateTable(){
     equipmentDataSource.updateGridSource(equipmentDataList);
-  }
-
-
-  void addCallback(Function callback){
-    if(callbacks.contains(callback) == false){
-      this.callbacks.add(callback);
-    }
-  }
-
-  void notifyCallbacks(){
-    for(Function callback in callbacks){
-      callback();
-    }
   }
 
   void addEquipment(List<List<String>> equipmentStringList){
@@ -76,6 +63,4 @@ class EquipmentDataHandler extends DataObserver{
   EquipmentData createEquipment(String equipRef, String ref, String equipName, String equipDesc, String onText, String offText, PLCTagData plcTagData){
     return EquipmentData(equipReference: equipRef, reference: ref, offText: offText, description: equipDesc, name: equipName, onText: onText, plcTagData: plcTagData);
   }
-
-
 }

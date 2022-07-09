@@ -1,4 +1,4 @@
-import 'package:flutter_windows/model/DataObserver.dart';
+import 'package:flutter_windows/model/DataNotifier.dart';
 import 'package:flutter_windows/model/alert/AttentionAlert.dart';
 import 'package:flutter_windows/model/alert/InfoAlert.dart';
 import 'package:flutter_windows/model/alert/InvalidAlertTypeException.dart';
@@ -8,7 +8,9 @@ import 'AlarmAlert.dart';
 import 'AlertData.dart';
 import 'WarningAlert.dart';
 
-class AlertDataHandler extends DataObserver{
+abstract class AlertDataHandler extends DataNotifier{
+  // Update Data
+  void readData(List<bool> digitalInputs, List<int> analogInputs);
   // Data Source
   late final AlertDataSource alertDataSource;
 
@@ -18,67 +20,51 @@ class AlertDataHandler extends DataObserver{
   // Active alerts
   final List<AlertData> activeAlertList = [];
   final Map<String, AlertData> activeAlertMap = {};
-  // Acknowledged alerts
-  final List<AlertData> acknowledgedAlertList = [];
-  // Alert History
-  final List<AlertData> historyAlertList = [];
+  int tableMode = 0;
 
-  final List<Function> callbacks = [];
+  bool acknowledgeFeedback = false;
 
-  void updateAlertState(String id, bool activeState, bool acknowledgeState) {
+  void updateAlertState(String id, bool activeState) {
+    bool acknowledge = true;
     if(activeAlertMap.containsKey(id) == false) {
       return;
     }
+    if(activeState == true) {
+      acknowledge = false;
+    }
     // Update Map
     AlertData activeAlert = activeAlertMap[id]!;
-    activeAlert.updateState(activeState, acknowledgeState);
+    activeAlert.updateState(activeState);
+    activeAlert.updateAcknowledge(acknowledge);
     // Update List
     for(AlertData alert in activeAlertList) {
       if(alert.id == id) {
-        alert.updateState(activeState, acknowledgeState);
-        return;
+        alert.updateState(activeState);
+        activeAlert.updateAcknowledge(acknowledge);
       }
     }
   }
 
-  void updateTableMode(int mode) {
-    switch(mode) {
-      case 0:
-        alertDataSource.updateGridSource(historyAlertList);
-        break;
-      case 1:
-        alertDataSource.updateGridSource(activeAlertList);
-        break;
-      case 2:
-        alertDataSource.updateGridSource(acknowledgedAlertList);
-        break;
+  void acknowledgeAll() {
+    for(AlertData alert in activeAlertMap.values) {
+      alert.updateAcknowledge(true);
     }
+    for(AlertData alert in activeAlertList) {
+      alert.updateAcknowledge(true);
+    }
+    notifyCallbacks();
+  }
+
+  void updateTableMode(int mode) {
+    tableMode = mode;
+  }
+
+  void updateTable() {
+    alertDataSource.updateGridSource(activeAlertList);
   }
 
   bool doesActiveAlertEntryExist(String id) {
     return activeAlertMap.containsKey(id);
-  }
-
-  void performAcknowledgeCheck(String id) {
-    if(activeAlertMap.containsKey(id) == false) {
-      return;
-    }
-    AlertData alert = activeAlertMap[id]!;
-    bool activeState = alert.active;
-    bool acknowledgeState = alert.acknowledge;
-    // 0 0 - Inactive State and Not Acknowledged  == Do nothing
-    if(activeState == false && acknowledgeState == false) {}
-    // 0 1 - Inactive State and Acknowledged      == Remove from active alerts list/map | Add to acknowledge alerts list/map
-    if(activeState == false && acknowledgeState == true) {
-      removeActiveAlert(alert);
-      addAcknowledgedAlert(alert);
-    }
-    // 1 0 - Active State and Not Acknowledged    == Do nothing
-    if(activeState == true && acknowledgeState == false) {}
-    // 1 1 - Active State and Acknowledged        == Keep as active alerts list/map | Add to acknowledge alerts list/map
-    if(activeState == true && acknowledgeState == true) {
-      addAcknowledgedAlert(alert);
-    }
   }
 
   /// ACTIVE ALERT HANDLING
@@ -97,85 +83,7 @@ class AlertDataHandler extends DataObserver{
     // if alert doesn't already exist - push into the table
     activeAlertList.add(newAlert);
     activeAlertMap[newAlert.id] = newAlert;
-    addHistoryAlert(newAlert);
     return true;
-  }
-
-  bool removeActiveAlert(AlertData oldAlert) {
-    if(doesActiveAlertEntryExist(oldAlert.id)){
-      activeAlertList.remove(oldAlert);
-      activeAlertMap.remove(oldAlert.id);
-      return true;
-    }
-    return false;
-  }
-//
-//  bool acknowledgeActiveAlert(String id) {
-//    if(activeAlertMap.containsKey(id) == true){
-//      activeAlertMap[id]!.acknowledge = true;
-//      for(AlertData alert in activeAlertList){
-//        if(alert.id == id){
-//          alert.acknowledge = true;
-//          // Add to acknowledged alert list
-//          addAcknowledgedAlert(alert.clone(alert.active));
-//          // Remove from active alert list - only if it is inactive
-//          if(alert.active == false){
-//            removeActiveAlert(alert);
-//          }
-//          return true;
-//        }
-//      }
-//    }
-//    return false;
-//  }
-
-  /// ACKNOWLEDGED ALERT HANDLING
-  void addAcknowledgedAlert(AlertData ackAlert) {
-    if(acknowledgedAlertList.contains(ackAlert) == true){
-      return;
-    }
-    acknowledgedAlertList.add(ackAlert);
-  }
-
-  bool removeAcknowledgedAlert(AlertData alert) {
-    for(int i = 0; i < acknowledgedAlertList.length; i++){
-      AlertData alertData = acknowledgedAlertList[i];
-      if(alertData.id == alert.id && alertData.timeString == alert.timeString) {
-        acknowledgedAlertList.remove(alertData);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /// ALL ALERT HANDLING
-  bool addHistoryAlert(AlertData newAlert) {
-    historyAlertList.add(newAlert);
-    return true;
-  }
-
-  bool removeHistoryAlert(AlertData alert) {
-    for(int i = 0; i < historyAlertList.length; i++) {
-      AlertData existingAlert = historyAlertList[i];
-      if(existingAlert.id == alert.id && existingAlert.timeString == alert.timeString) {
-        historyAlertList.remove(alert);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /// OBSERVER HANDLING
-  void addCallback(Function callback){
-    if(callbacks.contains(callback) == false){
-      this.callbacks.add(callback);
-    }
-  }
-
-  void notifyCallbacks(){
-    for(Function callback in callbacks){
-      callback();
-    }
   }
 
   void addAlertReference(List<List<String>> alertStringList){
@@ -225,20 +133,6 @@ class AlertDataHandler extends DataObserver{
       default:
         throw InvalidAlertTypeException(message: "InvalidAlertTypeException : Attempted to create an alert with unknown alert type = $id");
     }
-  }
-
-  void processAlertState({required String id, required bool activeState, required bool acknowledgeState}) {
-
-  }
-
-  @override
-  void updateData(List<bool> data) {
-//    print("Alert Data - Update Data callback");
-    super.updateData(data);
-  }
-
-  void acknowledge(){
-    
   }
 }
 

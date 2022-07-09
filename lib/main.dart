@@ -1,30 +1,27 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:context_menus/context_menus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_windows/controller/room/flight_room/FlightRoomAlertDataHandler.dart';
-import 'package:flutter_windows/controller/room/flight_room/FlightRoomSummaryDataHandler.dart';
+import 'package:flutter_windows/controller/room/flight_room/FlightAlertDataHandler.dart';
+import 'package:flutter_windows/controller/room/flight_room/FlightGameDataHandler.dart';
 import 'package:flutter_windows/model/alert/AlertData.dart';
-import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/model/equipment/EquipmentData.dart';
-import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
+import 'package:flutter_windows/model/game/GameControlData.dart';
+import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
 import 'package:flutter_windows/model/hint/HintData.dart';
 import 'package:flutter_windows/model/hint/HintDataHandler.dart';
-import 'package:flutter_windows/model/puzzle/PuzzleData.dart';
-import 'controller/room/flight_room/FlightRoomEquipmentDataHandler.dart';
-import 'controller/room/flight_room/FlightRoomPuzzleDataHandler.dart';
+import 'package:flutter_windows/model/stage/StageData.dart';
 import 'package:flutter_windows/view/screen/MainScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/data/ModbusHandler.dart';
 import 'controller/io.dart';
+import 'controller/room/flight_room/FlightEquipmentDataHandler.dart';
+import 'controller/room/flight_room/FlightStageDataHandler.dart';
 import 'model/DataHandler.dart';
 import 'model/DataMaster.dart';
 import 'model/action/ActionDataHandler.dart';
-import 'model/puzzle/PuzzleDataHandler.dart';
-import 'model/room/RoomDataHandler.dart';
+import 'model/room/GameDataHandler.dart';
 
 void main() async {
   int pollRate = 500;
@@ -41,10 +38,10 @@ void main() async {
     }
     // Initialize Handlers
     ActionDataHandler actionDataHandler = ActionDataHandler();
-    FlightRoomAlertDataHandler alertDataHandler = FlightRoomAlertDataHandler();
+    FlightAlertDataHandler alertDataHandler = FlightAlertDataHandler();
     FlightRoomEquipmentDataHandler equipmentDataHandler = FlightRoomEquipmentDataHandler();
-    FlightRoomPuzzleDataHandler puzzleDataHandler = FlightRoomPuzzleDataHandler();
-    RoomDataHandler roomDataHandler = FlightRoomSummaryDataHandler();
+    FlightStageDataHandler puzzleDataHandler = FlightStageDataHandler();
+    GameDataHandler roomDataHandler = FlightRoomGameDataHandler();
     HintDataHandler hintDataHandler = HintDataHandler();
 
     // Extract Room Information
@@ -59,15 +56,15 @@ void main() async {
     List<List<String>> hintDataList = await ExtractHintDataList(id);
 
     // Parse and Add Room Information
-    roomDataHandler.addRoom(roomInfo);
+    roomDataHandler.addGame(roomInfo);
     // Parse and Add Equipment Data List
     equipmentDataHandler.addEquipment(equipmentDataList);
     EquipmentDataSource equipmentDataSource = EquipmentDataSource(equipmentStates: equipmentDataHandler.equipmentDataList);
     equipmentDataHandler.equipmentDataSource = equipmentDataSource;
     // Parse and Add Puzzle Data List
-    puzzleDataHandler.addPuzzle(puzzleDataList);
-    PuzzleDataSource puzzleDataSource = PuzzleDataSource(puzzleStates: puzzleDataHandler.puzzleDataList);
-    puzzleDataHandler.puzzleDataSource = puzzleDataSource;
+    puzzleDataHandler.addStage(puzzleDataList);
+    StageDataSource puzzleDataSource = StageDataSource(stageDataList: puzzleDataHandler.stageDataList);
+    puzzleDataHandler.dataSource = puzzleDataSource;
     // Parse and Add Alert Data List
     alertDataHandler.addAlertReference(alertDataList);
     AlertDataSource alertDataSource = AlertDataSource(alerts: alertDataHandler.activeAlertList);
@@ -77,6 +74,11 @@ void main() async {
     HintDataSource hintDataSource = HintDataSource(hintStates: hintDataHandler.hintDataList);
     hintDataHandler.hintDataSource = hintDataSource;
 
+    // Create Logging Data Source
+    GameControlDataHandler gameControlDataHandler = GameControlDataHandler(roomData: roomDataHandler.getGame());
+    GameControlDataSource gameControlDataSource = GameControlDataSource(gameControlDataList: []);
+    gameControlDataHandler.gameControlDataSource = gameControlDataSource;
+
 
     // Initialize Data Handler
     DataHandler dataHandler = DataHandler(
@@ -84,13 +86,14 @@ void main() async {
       actionDataHandler: actionDataHandler,
       alertDataHandler: alertDataHandler,
       equipmentDataHandler: equipmentDataHandler,
-      puzzleDataHandler: puzzleDataHandler,
-      roomDataHandler: roomDataHandler,
+      stageDataHandler: puzzleDataHandler,
+      gameDataHandler: roomDataHandler,
       hintDataHandler: hintDataHandler,
+      gameControlDataHandler: gameControlDataHandler,
     );
 
     // Get IP address of this connection server
-    String ip = dataHandler.roomDataHandler.getRoom().ip;
+    String ip = dataHandler.gameDataHandler.getGame().ip;
     // Create modbus connection
     modbusHandler.createModbusConnection(
       server: new MBServer(ip),
@@ -98,7 +101,7 @@ void main() async {
       coilReadSize: 1000, coilStartAddress: 0,
       discreteInputReadSize: 1000, discreteInputStartAddress: 0,
       holdingRegisterReadSize: 1, holdingRegisterStartAddress: 0,
-      inputRegisterStartAddress: 1, inputRegisterReadSize: 0,
+      inputRegisterReadSize: 50, inputRegisterStartAddress: 0,
       pollRate: pollRate,
     );
     // Attempt connection establishment

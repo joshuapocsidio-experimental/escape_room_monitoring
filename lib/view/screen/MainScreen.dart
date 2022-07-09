@@ -1,18 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
-import 'package:flutter_windows/view/screen/page/RoomPage.dart';
-import 'package:flutter_windows/view/widget/room/alert/AlarmDataTable.dart';
-import '../../controller/data/exception/MissingDataHandlerException.dart';
 import 'package:flutter_windows/view/screen/page/OverviewPage.dart';
-import 'package:flutter_windows/view/screen/page/elevator_room/ElevatorRoomTabularPage.dart';
-import 'package:flutter_windows/view/screen/page/flight_room/FlightRoomTabularPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/InvalidRoomTabularPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/MagicianRoomTabularPage.dart';
-import 'package:flutter_windows/view/screen/page/room_tabular/VaultRoomTabularPage.dart';
+import 'package:flutter_windows/view/screen/page/RoomPage.dart';
+import 'package:flutter_windows/view/screen/page/room/ElevatorRoomPage.dart';
+import 'package:flutter_windows/view/screen/page/room/FlightRoomPage.dart';
+import 'package:flutter_windows/view/screen/page/room/InvalidRoomPage.dart';
+import 'package:flutter_windows/view/screen/page/room/MagicianRoomPage.dart';
+import 'package:flutter_windows/view/screen/page/room/VaultRoomPage.dart';
 import 'package:provider/provider.dart';
 
+import '../../controller/data/exception/MissingDataHandlerException.dart';
 import '../../model/DataMaster.dart';
-import '../../model/room/RoomData.dart';
+import '../../model/room/GameData.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -24,6 +23,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 2;
   late ScrollController _scrollController;
+  late NavigationHandler navHandler;
 
   void _onNavigation(int index){
     setState(() {
@@ -33,13 +33,14 @@ class _MainScreenState extends State<MainScreen> {
 
   void _refreshState() {
     setState(() {
-      print("Badge");
     });
   }
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    navHandler = NavigationHandler();
+    navHandler.addCallback(_onNavigation);
     super.initState();
   }
   @override
@@ -47,9 +48,11 @@ class _MainScreenState extends State<MainScreen> {
     DataMaster dataMaster = Provider.of<DataMaster>(context);
     dataMaster.getDataHandler('flrm01').alertDataHandler.addCallback(_refreshState);
 
+    NavigationPane navPane = buildNavigationPane(dataMaster: dataMaster);
+
     return NavigationView(
       appBar: buildNavigationAppBar(),
-      pane: buildNavigationPane(dataMaster: dataMaster),
+      pane: navPane,
       content: buildNavigationBody(
         dataMaster: dataMaster,
       ),
@@ -78,71 +81,75 @@ class _MainScreenState extends State<MainScreen> {
   Widget buildNavigationBody({required DataMaster dataMaster}) {
     List<Widget> navigationWidgets = [];
 
-    RoomData vaultRoomData;
-    RoomData flightRoomData;
-    RoomData magicianRoomData;
-    RoomData elevatorRoomData;
+    GameData vaultGameData;
+    GameData flightGameData;
+    GameData magicianGameData;
+    GameData elevatorGameData;
 
     navigationWidgets.add(OverviewPage());
 
     // The Vault Escape Room
     try{
-      vaultRoomData = dataMaster.getDataHandler("tvrm01").roomDataHandler.getRoom();
-      navigationWidgets.add(VaultRoomTabularPage(roomID: vaultRoomData.id, roomName: vaultRoomData.name, maxTime: vaultRoomData.maxTime));
+      vaultGameData = dataMaster.getDataHandler("tvrm01").gameDataHandler.getGame();
+      navigationWidgets.add(VaultRoomPage(roomID: vaultGameData.id, roomName: vaultGameData.name, maxTime: vaultGameData.maxTime));
     }
     on MissingDataHandlerException catch (e) {
-      print(e.message);
-      navigationWidgets.add(InvalidRoomTabularPage(roomName: "The Vault Escape Room"));
+//      print(e.message);
+      navigationWidgets.add(InvalidRoomPage(roomName: "The Vault Escape Room"));
     }
     // Flight Room Escape Room
     try{
-      flightRoomData = dataMaster.getDataHandler("flrm01").roomDataHandler.getRoom();
+      flightGameData = dataMaster.getDataHandler("flrm01").gameDataHandler.getGame();
       // navigationWidgets.add(InvalidRoomTabularPage(roomName: "Flight 729 Escape Room"));
       navigationWidgets.add(
         RoomPage(
             dataHandler: dataMaster.getDataHandler('flrm01'),
-            child: FlightRoomTabularPage(roomID: flightRoomData.id, roomName: flightRoomData.name, maxTime: flightRoomData.maxTime),
+            child: FlightRoomPage(roomID: flightGameData.id, roomName: flightGameData.name, maxTime: flightGameData.maxTime),
         ),
       );
     }
     on MissingDataHandlerException catch (e) {
-      print(e.message);
-      navigationWidgets.add(InvalidRoomTabularPage(roomName: "Flight 729 Escape Room"));
+//      print(e.message);
+      navigationWidgets.add(InvalidRoomPage(roomName: "Flight 729 Escape Room"));
     }
     // Magician's Code Escape Room
     try{
-      magicianRoomData = dataMaster.getDataHandler("mcrm01").roomDataHandler.getRoom();
-      navigationWidgets.add(MagicianRoomTabularPage(roomID: magicianRoomData.id, roomName: magicianRoomData.name, maxTime: magicianRoomData.maxTime));
+      magicianGameData = dataMaster.getDataHandler("mcrm01").gameDataHandler.getGame();
+      navigationWidgets.add(MagicianRoomPage(roomID: magicianGameData.id, roomName: magicianGameData.name, maxTime: magicianGameData.maxTime));
     }
     on MissingDataHandlerException catch (e) {
-      print(e.message);
-      navigationWidgets.add(InvalidRoomTabularPage(roomName: "Magician's Code Escape Room"));
+//      print(e.message);
+      navigationWidgets.add(InvalidRoomPage(roomName: "Magician's Code Escape Room"));
     }
     // The Elevator Escape Room
     try{
-      elevatorRoomData = dataMaster.getDataHandler("term01").roomDataHandler.getRoom();
-      navigationWidgets.add(ElevatorRoomTabularPage(roomID: elevatorRoomData.id, roomName: elevatorRoomData.name, maxTime: elevatorRoomData.maxTime));
+      elevatorGameData = dataMaster.getDataHandler("term01").gameDataHandler.getGame();
+      navigationWidgets.add(ElevatorRoomPage(roomID: elevatorGameData.id, roomName: elevatorGameData.name, maxTime: elevatorGameData.maxTime));
     }
     on MissingDataHandlerException catch (e) {
-      print(e.message);
-      navigationWidgets.add(InvalidRoomTabularPage(roomName: "The Elevator Escape Room"));
+//      print(e.message);
+      navigationWidgets.add(InvalidRoomPage(roomName: "The Elevator Escape Room"));
     }
 
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Trends
+    navigationWidgets.add(InvalidRoomPage(roomName: "Placeholder")); // Trends
 //    navigationWidgets.add(AlarmDataTable(tableMode: 1, alertDataHandler: dataMaster.getDataHandler('flrm01').alertDataHandler,));
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Alerts
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Handover Notes
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Info Center
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Preferences
-    navigationWidgets.add(InvalidRoomTabularPage(roomName: "Placeholder")); // Exit
+    navigationWidgets.add(InvalidRoomPage(roomName: "Placeholder")); // Alerts
+    navigationWidgets.add(InvalidRoomPage(roomName: "Placeholder")); // Handover Notes
+    navigationWidgets.add(InvalidRoomPage(roomName: "Placeholder")); // Info Center
+    navigationWidgets.add(InvalidRoomPage(roomName: "Placeholder")); // Preferences
+    navigationWidgets.add(InvalidRoomPage(roomName: "Placeholder")); // Exit
 
-    return NavigationBody(
-      animationDuration: Duration(milliseconds: 250),
-      animationCurve: Curves.easeInOut,
-      index: _currentIndex,
-      children: navigationWidgets,
+    return Provider.value(
+      value: navHandler,
+      child: NavigationBody(
+        animationDuration: Duration(milliseconds: 250),
+        animationCurve: Curves.easeInOut,
+        index: _currentIndex,
+        children: navigationWidgets,
+      ),
     );
   }
+
 
   NavigationPane buildNavigationPane({required DataMaster dataMaster}) {
     final ScrollController _verticalScrollController = ScrollController();
@@ -216,4 +223,30 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
+class NavigationHandler {
+  List<Function> callbacks = [];
+
+  void navigate(String roomID) {
+    switch(roomID) {
+      case 'flrm01':
+        notifyListeners(2);
+        break;
+    }
+  }
+
+  void addCallback(Function function) {
+    callbacks.add(function);
+  }
+
+  void notifyListeners(int index) {
+    for(Function callback in callbacks) {
+      callback(index);
+    }
+  }
+
+}
+
+class RoomNavigationPane extends NavigationPane {
+
+}
 

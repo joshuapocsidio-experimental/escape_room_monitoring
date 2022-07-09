@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:modbus/modbus.dart' as modbus;
 import 'package:modbus/modbus.dart';
 
-import '../../model/DataObserver.dart';
 import 'ModbusObserver.dart';
 
 /// Class for holding information on each modbus device
@@ -106,7 +104,12 @@ class MBHandler with ChangeNotifier{
   }
   // Write Data
   void writeData(String ipAddress, int address, bool state) async {
-    connectionMap[ipAddress]!.write(address, state);
+    try{
+      connectionMap[ipAddress]!.write(address, state);
+    }
+    on Exception catch(e) {
+      connectionMap[ipAddress]!.write(address, state);
+    }
   }
 
   // Send Commands - These are typically one-shot type and should reset after 1x scan time
@@ -188,10 +191,10 @@ class _MBConnection{
 //    await _writeCoils(); // TODO
 //    await _writeHoldingRegisters(); // TODO
     discreteInputs = await _readDiscreteInputs();
-//    inputRegisters = await _readInputRegisters(); // TODO
+    inputRegisters = await _readInputRegisters(); // TODO
 
 //    notifyDataObservers(coils); // TODO
-    notifyDataObservers(discreteInputs);
+    notifyDataObservers(discreteInputs, inputRegisters);
 //    notifyDataObservers(inputRegisters); // TODO
 //    notifyDataObservers(holdingRegisters); // TODO
   }
@@ -212,21 +215,21 @@ class _MBConnection{
     // Exception thrown when read size is over 2000
     on modbus.ModbusAmountException catch(e){
       print("Debug: ModbusAmountException - ${e.toString()}");
-      return List.filled(discreteInputReadSize, 0);
+      return List.filled(inputRegisterReadSize, 0);
     }
     // Exception thrown when read address doesn't meet the following criteria:
     //  - Address range not setup as discrete inputs on modbus device
     //  - Address range isn't in a valid format
     on modbus.ModbusIllegalAddressException catch(e){
       print("Debug: ModbusIllegalAddressException - ${e.toString()}");
-      return List.filled(discreteInputReadSize, 0);
+      return List.filled(inputRegisterReadSize, 0);
     }
     // Any other exceptions not expected nor captured will throw this error
     // This is added for future debugging
     catch(e){
       print("Debug: Unexpected Exception ${e.toString()}");
       print("Debug: Please report this exception and handle accordingly.");
-      return List.filled(discreteInputReadSize, 0);
+      return List.filled(inputRegisterReadSize, 0);
     }
   }
 
@@ -340,9 +343,9 @@ class _MBConnection{
     observers.add(observer);
   }
 
-  void notifyDataObservers(List<bool> data){
+  void notifyDataObservers(List<bool> digitalInputs, List<int> analogInputs){
     for(ModbusObserver observer in observers){
-      observer.update(data);
+      observer.update(digitalInputs, analogInputs);
     }
   }
 }
