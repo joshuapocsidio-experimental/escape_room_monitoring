@@ -39,3 +39,12 @@ Future Plans:
 5 - Allow ability to write handover notes for employees to utilise (a nice to have but not necessary)
 
 For any questions/discussions, please reach out at: https://www.linkedin.com/in/joshuapocsidio/
+
+Some sample screenshots below:
+![image](https://user-images.githubusercontent.com/23231101/178146921-419e7249-812a-47b6-8a52-78b3beecb5f4.png)
+
+![image](https://user-images.githubusercontent.com/23231101/178146907-4986837c-76cc-4774-9339-604bb42adb80.png)
+
+![image](https://user-images.githubusercontent.com/23231101/178146941-b44438e8-7263-42a6-b9f6-78752178c6eb.png)
+
+
