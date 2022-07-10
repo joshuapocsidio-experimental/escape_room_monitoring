@@ -1,5 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_windows/model/DataController.dart';
+import 'package:flutter_windows/model/DataControllerManager.dart';
+import 'package:flutter_windows/model/DataHandler.dart';
 import 'package:flutter_windows/model/DataMaster.dart';
+import 'package:flutter_windows/view/screen/page/SitePage.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controller/data/exception/MissingDataHandlerException.dart';
@@ -21,31 +25,65 @@ class _OverviewPageState extends State<OverviewPage> {
   @override
   Widget build(BuildContext context) {
     DataMaster dataMaster = Provider.of<DataMaster>(context);
+    DataHandler dataHandler;
+    DataControllerManager dataControllerManager;
 
     // The Vault Data Handler
     try{
-      overviewCards.add(SiteOverviewCard(dataHandler: dataMaster.getDataHandler('tvrm01'),));
+      dataHandler = dataMaster.getDataHandler('tvrm01');
+      dataControllerManager = dataMaster.getDataControllerManager('tvrm01');
+      overviewCards.add(
+          SitePage(
+            dataHandler: dataHandler,
+            dataControllerManager: dataControllerManager,
+            child: SiteOverviewCard(),
+          ),
+      );
     }
     on MissingDataHandlerException catch(e){
       print(e.message);
     }
     // Flight 729 Data Handler
     try{
-      overviewCards.add(SiteOverviewCard(dataHandler: dataMaster.getDataHandler('flrm01'),));
+      dataHandler = dataMaster.getDataHandler('flrm01');
+      dataControllerManager = dataMaster.getDataControllerManager('flrm01');
+      overviewCards.add(
+        SitePage(
+          dataHandler: dataHandler,
+          dataControllerManager: dataControllerManager,
+          child: SiteOverviewCard(),
+        ),
+      );
     }
     on MissingDataHandlerException catch(e){
       print(e.message);
     }
     // Magician's Code Data Handler
     try{
-      overviewCards.add(SiteOverviewCard(dataHandler: dataMaster.getDataHandler('mcrm01'),));
+      dataHandler = dataMaster.getDataHandler('mcrm01');
+      dataControllerManager = dataMaster.getDataControllerManager('mcrm01');
+      overviewCards.add(
+        SitePage(
+          dataHandler: dataHandler,
+          dataControllerManager: dataControllerManager,
+          child: SiteOverviewCard(),
+        ),
+      );
     }
     on MissingDataHandlerException catch(e){
       print(e.message);
     }
     // The Elevator Data Handler
     try{
-      overviewCards.add(SiteOverviewCard(dataHandler: dataMaster.getDataHandler('term01'),));
+      dataHandler = dataMaster.getDataHandler('term01');
+      dataControllerManager = dataMaster.getDataControllerManager('term01');
+      overviewCards.add(
+        SitePage(
+          dataHandler: dataHandler,
+          dataControllerManager: dataControllerManager,
+          child: SiteOverviewCard(),
+        ),
+      );
     }
     on MissingDataHandlerException catch(e){
       print(e.message);

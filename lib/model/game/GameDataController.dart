@@ -1,16 +1,26 @@
+import 'package:flutter_windows/controller/data/ModbusHandler.dart';
+import 'package:flutter_windows/model/DataController.dart';
 import 'package:flutter_windows/model/DataNotifier.dart';
 import 'package:flutter_windows/model/game/GameControlData.dart';
 import 'package:flutter_windows/model/game/LogObserver.dart';
 import 'package:flutter_windows/model/room/GameData.dart';
 
-class GameControlDataHandler extends DataNotifier implements LogObserver {
-  final GameData roomData;
+abstract class GameDataController extends DataController implements LogObserver {
+  // protected functions
+  void startGame();
+  void stopGame();
+  void resetGame();
+  final GameData gameData;
   // Data Source
   late final GameControlDataSource gameControlDataSource;
+  // Timer Add and Subtract fields
+  late int timerChangeMinutes;
 
   final List<GameControlData> gameControlDataList = [];
 
-  GameControlDataHandler({required this.roomData});
+  GameDataController({required this.gameData, required MBHandler modbusHandler, required String ip}) : super(mbHandler: modbusHandler, ip: ip){
+    timerChangeMinutes = 5;
+  }
 
   String getCurrentTimeString() {
     var dt = DateTime.now();
@@ -36,6 +46,7 @@ class GameControlDataHandler extends DataNotifier implements LogObserver {
       description: "Game program started and timer countdown is activated",
     );
     gameControlDataList.add(startCommandLog);
+    startGame();
     notifyCallbacks();
   }
 
@@ -47,6 +58,7 @@ class GameControlDataHandler extends DataNotifier implements LogObserver {
       description: "Game program and timer is stopped",
     );
     gameControlDataList.add(stopCommandLog);
+    stopGame();
     notifyCallbacks();
   }
 
@@ -58,26 +70,27 @@ class GameControlDataHandler extends DataNotifier implements LogObserver {
       description: "Game program and timer reset activated",
     );
     gameControlDataList.add(resetCommandLog);
+    resetGame();
     notifyCallbacks();
   }
 
-  void addTimerStartLog([String startTimeString = '']) {
+  void addTimerStartLog() {
     GameControlData startCommandLog = GameControlData(
       date: getCurrentDateString(),
       timeString: getCurrentTimeString(),
       title: "Timer Start",
-      description: startTimeString == '' ? "Timer countdown commenced" : "Timer countdown resumed at $startTimeString",
+      description: gameData.running == false ? "Timer countdown commenced" : "Timer countdown resumed at ${gameData.currTime}",
     );
     gameControlDataList.add(startCommandLog);
     notifyCallbacks();
   }
 
-  void addTimerStopLog(String stopTimeString) {
+  void addTimerStopLog() {
     GameControlData stopCommandLog = GameControlData(
       date: getCurrentDateString(),
       timeString: getCurrentTimeString(),
       title: "Timer Stop",
-      description: "Timer countdown stopped at $stopTimeString",
+      description: "Timer countdown stopped at ${gameData.currTime}",
     );
     gameControlDataList.add(stopCommandLog);
     notifyCallbacks();

@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_windows/controller/room/flight_room/FlightAlertDataHandler.dart';
-import 'package:flutter_windows/controller/room/flight_room/FlightGameDataHandler.dart';
+import 'package:flutter_windows/controller/room/flight_room/handler/FlightStageDataHandler.dart';
+import 'package:flutter_windows/model/DataController.dart';
+import 'package:flutter_windows/model/DataControllerManager.dart';
+import 'controller/room/flight_room/handler/FlightAlertDataHandler.dart';
+import 'controller/room/flight_room/controller/FlightGameController.dart';
+import 'controller/room/flight_room/handler/FlightGameDataHandler.dart';
 import 'package:flutter_windows/model/alert/AlertData.dart';
 import 'package:flutter_windows/model/equipment/EquipmentData.dart';
 import 'package:flutter_windows/model/game/GameControlData.dart';
-import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
+import 'package:flutter_windows/model/game/GameDataController.dart';
 import 'package:flutter_windows/model/hint/HintData.dart';
 import 'package:flutter_windows/model/hint/HintDataHandler.dart';
 import 'package:flutter_windows/model/stage/StageData.dart';
@@ -16,8 +20,7 @@ import 'package:provider/provider.dart';
 
 import 'controller/data/ModbusHandler.dart';
 import 'controller/io.dart';
-import 'controller/room/flight_room/FlightEquipmentDataHandler.dart';
-import 'controller/room/flight_room/FlightStageDataHandler.dart';
+import 'controller/room/flight_room/handler/FlightEquipmentDataHandler.dart';
 import 'model/DataHandler.dart';
 import 'model/DataMaster.dart';
 import 'model/action/ActionDataHandler.dart';
@@ -37,12 +40,13 @@ void main() async {
       break;
     }
     // Initialize Handlers
+    GameDataHandler gameDataHandler = FlightRoomGameDataHandler();
+    HintDataHandler hintDataHandler = HintDataHandler();
     ActionDataHandler actionDataHandler = ActionDataHandler();
+
     FlightAlertDataHandler alertDataHandler = FlightAlertDataHandler();
     FlightRoomEquipmentDataHandler equipmentDataHandler = FlightRoomEquipmentDataHandler();
     FlightStageDataHandler puzzleDataHandler = FlightStageDataHandler();
-    GameDataHandler roomDataHandler = FlightRoomGameDataHandler();
-    HintDataHandler hintDataHandler = HintDataHandler();
 
     // Extract Room Information
     Map<String, String> roomInfo = await ExtractRoomInfo(id);
@@ -56,7 +60,7 @@ void main() async {
     List<List<String>> hintDataList = await ExtractHintDataList(id);
 
     // Parse and Add Room Information
-    roomDataHandler.addGame(roomInfo);
+    gameDataHandler.addGame(roomInfo);
     // Parse and Add Equipment Data List
     equipmentDataHandler.addEquipment(equipmentDataList);
     EquipmentDataSource equipmentDataSource = EquipmentDataSource(equipmentStates: equipmentDataHandler.equipmentDataList);
@@ -74,10 +78,6 @@ void main() async {
     HintDataSource hintDataSource = HintDataSource(hintStates: hintDataHandler.hintDataList);
     hintDataHandler.hintDataSource = hintDataSource;
 
-    // Create Logging Data Source
-    GameControlDataHandler gameControlDataHandler = GameControlDataHandler(roomData: roomDataHandler.getGame());
-    GameControlDataSource gameControlDataSource = GameControlDataSource(gameControlDataList: []);
-    gameControlDataHandler.gameControlDataSource = gameControlDataSource;
 
 
     // Initialize Data Handler
@@ -87,9 +87,24 @@ void main() async {
       alertDataHandler: alertDataHandler,
       equipmentDataHandler: equipmentDataHandler,
       stageDataHandler: puzzleDataHandler,
-      gameDataHandler: roomDataHandler,
+      gameDataHandler: gameDataHandler,
       hintDataHandler: hintDataHandler,
-      gameControlDataHandler: gameControlDataHandler,
+    );
+
+    // Initialize Controllers
+    FlightGameController gameController = FlightGameController(
+      ip: gameDataHandler.getGame().ip,
+      gameData: gameDataHandler.getGame(),
+      modbusHandler: modbusHandler,
+    );
+
+    // Create Logging Data Source
+    GameControlDataSource gameControlDataSource = GameControlDataSource(gameControlDataList: []);
+    gameController.gameControlDataSource = gameControlDataSource;
+
+    // Initialize Data Controller
+    DataControllerManager dataControllerManager = DataControllerManager(
+      gameDataController: gameController,
     );
 
     // Get IP address of this connection server
@@ -97,7 +112,7 @@ void main() async {
     // Create modbus connection
     modbusHandler.createModbusConnection(
       server: new MBServer(ip),
-      readOnly: true,
+      readOnly: false,
       coilReadSize: 1000, coilStartAddress: 0,
       discreteInputReadSize: 1000, discreteInputStartAddress: 0,
       holdingRegisterReadSize: 1, holdingRegisterStartAddress: 0,
@@ -124,12 +139,13 @@ void main() async {
 
       // Add room data handler to master
       master.addDataHandler(id, dataHandler);
+      master.addDataControllerManager(id, dataControllerManager);
     }
     else{
       print("Debug: Connection Exception - Cannot establish connection with IP address $ip");
     }
   }
-  Timer(Duration(seconds: 5), (){
+  Timer(Duration(seconds: 1), (){
     print("CONNECTED");
     modbusHandler.startPoll();
   });

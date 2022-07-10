@@ -3,18 +3,18 @@ import 'package:flutter_windows/model/DataController.dart';
 import 'package:flutter_windows/model/DataControllerManager.dart';
 import 'package:flutter_windows/model/DataHandler.dart';
 
-class RoomPage extends InheritedWidget {
+class SitePage extends InheritedWidget {
   final DataHandler dataHandler;
+  SitePage({required Widget child, required this.dataHandler, required this.dataControllerManager}) : super(child: child);
+
   final DataControllerManager dataControllerManager;
 
-  RoomPage({required Widget child, required this.dataHandler, required this.dataControllerManager}) : super(child: child);
-
   @override
-  bool updateShouldNotify(RoomPage oldWidget) {
+  bool updateShouldNotify(SitePage oldWidget) {
     return dataHandler != oldWidget.dataHandler || dataControllerManager != oldWidget.dataControllerManager;
   }
 
-  static RoomPage of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<RoomPage>()!;
+  static SitePage of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SitePage>()!;
   }
 }

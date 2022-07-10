@@ -112,21 +112,14 @@ class MBHandler with ChangeNotifier{
     }
   }
 
-  // Send Commands - These are typically one-shot type and should reset after 1x scan time
-  void sendCommand(String ipAddress, int address) async {
-    connectionMap[ipAddress]!.write(address, true);
-    // Wait for a full scan rate
-    Timer(Duration(milliseconds: pollRate), (){
-      connectionMap[ipAddress]!.write(address, false);
-    });
-  }
-
 }
 
 /// Class for each Modbus to Client Connection
 /// This class holds all read and write parameters, and information on
 /// modbus devices that are associated with this connection
 class _MBConnection{
+  // Write Retry Index
+  int numRetry = 0;
   // Connection Status
   late bool isConnected;
   // Modbus Read Parameters
@@ -167,6 +160,7 @@ class _MBConnection{
     }
 
     // Initialize output and input registers - 16 bit registers
+    print("Number of Coils: ${coilReadSize.toString()}");
     coils = List.filled(coilReadSize, false);
     discreteInputs = List.filled(discreteInputReadSize, false);
 
@@ -188,21 +182,15 @@ class _MBConnection{
 
   // Read Input Registers
   void read() async {
-//    await _writeCoils(); // TODO
-//    await _writeHoldingRegisters(); // TODO
     discreteInputs = await _readDiscreteInputs();
     inputRegisters = await _readInputRegisters(); // TODO
 
-//    notifyDataObservers(coils); // TODO
     notifyDataObservers(discreteInputs, inputRegisters);
-//    notifyDataObservers(inputRegisters); // TODO
-//    notifyDataObservers(holdingRegisters); // TODO
   }
 
   // Write Output Registers
   void write(int address, bool state) async {
-    // TODO
-    await client.writeSingleCoil(address, state);
+    await _write(address, state);
   }
 
   /// Read Functions
@@ -248,27 +236,43 @@ class _MBConnection{
     // Exception thrown when read size is over 2000
     on modbus.ModbusAmountException catch(e){
       print("Debug: ModbusAmountException - ${e.toString()}");
-      return List.filled(discreteInputReadSize, false);
+      return discreteInputs;
     }
     // Exception thrown when read address doesn't meet the following criteria:
     //  - Address range not setup as discrete inputs on modbus device
     //  - Address range isn't in a valid format
     on modbus.ModbusIllegalAddressException catch(e){
       print("Debug: ModbusIllegalAddressException - ${e.toString()}");
-      return List.filled(discreteInputReadSize, false);
+      return discreteInputs;
     }
     // Any other exceptions not expected nor captured will throw this error
     // This is added for future debugging
     catch(e){
       print("Debug: Unexpected Exception ${e.toString()}");
       print("Debug: Please report this exception and handle accordingly.");
-      return List.filled(discreteInputReadSize, false);
+      return discreteInputs;
     }
   }
 
   /// WRITE TEST
   Future<void> _write(int address, bool state) async {
-    await client.writeSingleCoil(address, state);
+    try{
+      await client.writeSingleCoil(address, state);
+    }
+    catch(e) {
+      numRetry++;
+
+      if(numRetry < 20) {
+        print("Exception Catch: Try again.");
+        Timer(Duration(milliseconds: 500), (){
+          _write(address, state);
+        });
+      }
+      else{
+        print("Exception Catch: Could not write command. Please report this bug.");
+        numRetry = 0;
+      }
+    }
   }
 
   /// Write Functions

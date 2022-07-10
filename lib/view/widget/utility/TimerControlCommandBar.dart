@@ -1,31 +1,33 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
+import 'package:flutter_windows/model/game/GameDataController.dart';
 import 'package:flutter_windows/model/room/GameDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
+import 'package:flutter_windows/view/widget/utility/GenericCommandBarButton.dart';
+import 'package:flutter_windows/view/widget/utility/GenericConfirmationDialogPopup.dart';
 
 class TimerControlCommandBar extends StatefulWidget {
+  final GameDataController gameController;
+
+  TimerControlCommandBar({required this.gameController});
+
   @override
   _TimerControlCommandBarState createState() => _TimerControlCommandBarState();
 }
 
 class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
   late final TextEditingController _addTextEditingController;
-  late GameControlDataHandler gameControlDataHandler;
-  late GameDataHandler roomDataHandler;
-  int changeMinute = 5;
   bool editTextEnable = false;
 
   @override
   void initState() {
     _addTextEditingController = TextEditingController(
-      text: "$changeMinute minutes",
+      text: "${widget.gameController.timerChangeMinutes} minutes",
     );
+
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    gameControlDataHandler = RoomPage.of(context).dataHandler.gameControlDataHandler;
-    roomDataHandler = RoomPage.of(context).dataHandler.gameDataHandler;
     return Column(
       children: [
         Row(
@@ -60,33 +62,44 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
                   )
                 ],
                 primaryItems: [
-                  CommandBarButton(
-                    icon: const Icon(FluentIcons.play),
-                    label: const Text("Play"),
-                    onPressed: () {
-                      String timeStamp = '';
-                      if(roomDataHandler.getGame().running == true){
-                        timeStamp = roomDataHandler.getGame().currTime;
-                      }
-                      gameControlDataHandler.addTimerStartLog(timeStamp);
-                    },
+                  const CommandBarSeparator(),
+                  buildCommandBarButton(context,
+                    enable: !widget.gameController.gameData.running,
+                    enabledColor: Colors.green,
+                    label: "Play",
+                    enabledIconData: FluentIcons.play,
+                    callback: widget.gameController.addTimerStopLog,
+                    message: widget.gameController.gameData.running == true ?
+                    "Timer start command will be executed."
+                        "\nTimer will be resumed at ${widget.gameController.gameData.currTime}"
+                        "\nDo you wish to proceed?" :
+                    "Timer start command will be executed."
+                        "\nTimer countdown still start at ${widget.gameController.gameData.currTime}"
+                        "\nDo you wish to proceed?",
                   ),
                   const CommandBarSeparator(),
-                  CommandBarButton(
-                    icon: const Icon(FluentIcons.stop),
-                    label: const Text("Stop"),
-                    onPressed: () {
-                      gameControlDataHandler.addTimerStopLog(roomDataHandler.getGame().currTime);
-                    },
+                  buildCommandBarButton(context,
+                    enable: widget.gameController.gameData.running,
+                    enabledColor: Colors.orange,
+                    label: "Stop",
+                    enabledIconData: FluentIcons.stop,
+                    message: "Timer stop command will be executed."
+                        "\nTimer countdown will stop at ${widget.gameController.gameData.currTime}"
+                        "\nDo you wish to proceed?",
+                    callback: widget.gameController.addTimerStopLog,
                   ),
                   const CommandBarSeparator(),
-                  CommandBarButton(
-                    icon: const Icon(FluentIcons.reset),
-                    label: const Text("Reset"),
-                    onPressed: () {
-                      gameControlDataHandler.addTimerResetLog();
-                    },
+                  buildCommandBarButton(context,
+                    enable: !widget.gameController.gameData.running,
+                    enabledColor: Colors.red,
+                    label: "Reset",
+                    enabledIconData: FluentIcons.reset,
+                    message: "Timer reset command will be executed."
+                        "\nTimer countdown will be set at ${widget.gameController.gameData.maxTime}:00."
+                        "\nDo you wish to proceed?",
+                    callback: widget.gameController.addTimerResetLog,
                   ),
+                  const CommandBarSeparator(),
                 ],
               ),
             ),
@@ -105,7 +118,8 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
                     icon: const Icon(FluentIcons.add),
                     label: const Text("Add"),
                     onPressed: () {
-                      gameControlDataHandler.addTimerAddTimeLog(changeMinute);
+                      int addMinutes = widget.gameController.timerChangeMinutes;
+                      widget.gameController.addTimerAddTimeLog(addMinutes);
                     },
                   ),
                   const CommandBarSeparator(),
@@ -113,7 +127,8 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
                     icon: const Icon(FluentIcons.calculator_subtract),
                     label: const Text("Sub"),
                     onPressed: () {
-                      gameControlDataHandler.addTimerSubtractTimeLog(changeMinute);
+                      int subMinutes = widget.gameController.timerChangeMinutes;
+                      widget.gameController.addTimerSubtractTimeLog(subMinutes);
                     },
                   ),
                   const CommandBarSeparator(),
@@ -132,7 +147,7 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
                       _addTextEditingController.text = "$minString minutes";
                     }
                     else{
-                      _addTextEditingController.text = "$changeMinute minutes";
+                      _addTextEditingController.text = "${widget.gameController.timerChangeMinutes} minutes";
                     }
                     editTextEnable = false;
                   });
@@ -148,11 +163,11 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
               child: OutlinedButton(
                 onPressed: editTextEnable == true ? null : () {
                   setState(() {
-                    if(changeMinute > 60) {
+                    if(widget.gameController.timerChangeMinutes > 60) {
                       return;
                     }
-                    changeMinute++;
-                    _addTextEditingController.text = "$changeMinute minutes";
+                    widget.gameController.timerChangeMinutes++;
+                    _addTextEditingController.text = "${widget.gameController.timerChangeMinutes} minutes";
                   });
                 },
                 child: const Icon(
@@ -166,12 +181,12 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
               child: OutlinedButton(
                 onPressed: editTextEnable == true ? null : () {
                   setState(() {
-                    if(changeMinute == 0) {
+                    if(widget.gameController.timerChangeMinutes == 0) {
                       return;
                     }
 
-                    changeMinute++;
-                    _addTextEditingController.text = "$changeMinute minutes";
+                    widget.gameController.timerChangeMinutes++;
+                    _addTextEditingController.text = "${widget.gameController.timerChangeMinutes} minutes";
                   });
                 },
                 child: const Icon(
@@ -187,10 +202,10 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
                   setState(() {
                     editTextEnable = !editTextEnable;
                     if(editTextEnable == true) {
-                      _addTextEditingController.text = "$changeMinute";
+                      _addTextEditingController.text = "${widget.gameController.timerChangeMinutes}";
                     }
                     else{
-                      _addTextEditingController.text = "$changeMinute minutes";
+                      _addTextEditingController.text = "${widget.gameController.timerChangeMinutes} minutes";
                     }
                   });
                 },
@@ -206,4 +221,36 @@ class _TimerControlCommandBarState extends State<TimerControlCommandBar> {
       ],
     );
   }
+  CommandBarButton buildCommandBarButton (BuildContext context,
+      {String tooltip = '', required bool enable, required String label, required IconData enabledIconData, required String message, required Function callback, required Color enabledColor,
+      }){
+    if(tooltip == '') tooltip = label;
+
+    if(enable == false) {
+      return CommandBarButton(
+          icon: Tooltip(
+            child: Icon(FluentIcons.blocked,
+              color: Colors.grey.withAlpha(80),
+            ),
+            message: tooltip,
+          ),
+          label: Text(label, style: const TextStyle(color: Colors.grey)),
+          onPressed: null);
+    }
+    else{
+      return CommandBarButton(
+          icon: Icon(enabledIconData, color: enabledColor,),
+          label: Text(label, style: const TextStyle(color: Colors.black)),
+          onPressed: () {
+            showDialog(context: context, builder: (context){
+              return GenericConfirmationDialogPopup(
+                title: "$label Command - Are you sure?",
+                message: message,
+                callback: callback,
+              );
+            });
+          });
+    }
+  }
 }
+

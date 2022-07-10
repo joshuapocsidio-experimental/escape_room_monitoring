@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/view/widget/room/log/RoomLogCard.dart';
+import 'package:flutter_windows/view/widget/room/overview/room/RoomInterlockView.dart';
 
 import '../../../widget/room/alert/RoomAlertCard.dart';
 import '../../../widget/room/game/GameStateCard.dart';
@@ -42,7 +43,6 @@ class _FlightRoomPageState extends State<FlightRoomPage> {
                         child: RoomOverviewCard(),
                       ),
                       Expanded(
-                        flex: 1,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8, top: 8, bottom: 4, right: 4),
                           child: RoomLogCard(),

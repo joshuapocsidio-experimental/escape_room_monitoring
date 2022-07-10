@@ -3,15 +3,17 @@ import 'package:flutter_windows/model/room/GameDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 
 class GameProgressBar extends StatefulWidget {
+  final int progress;
+
+  GameProgressBar({required this.progress});
+
   @override
   _GameProgressBarState createState() => _GameProgressBarState();
 }
 
 class _GameProgressBarState extends State<GameProgressBar> {
-  late GameDataHandler roomDataHandler;
   @override
   Widget build(BuildContext context) {
-    roomDataHandler = RoomPage.of(context).dataHandler.gameDataHandler;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -32,7 +34,7 @@ class _GameProgressBarState extends State<GameProgressBar> {
         Expanded(
           flex: 13,
           child: ProgressBar(
-            value: roomDataHandler.getGame().progress.toDouble(),
+            value: widget.progress.toDouble(),
             backgroundColor: Colors.grey,
             activeColor: Colors.blue,
           ),
@@ -40,7 +42,7 @@ class _GameProgressBarState extends State<GameProgressBar> {
         Expanded(
           flex: 3,
           child: Text(
-            "${roomDataHandler.getGame().progress.toString()}%",
+            "${widget.progress.toString()}%",
             textAlign: TextAlign.center,
           ),
         ),

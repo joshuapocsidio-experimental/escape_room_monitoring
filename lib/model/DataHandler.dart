@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_windows/model/alert/AlertDataHandler.dart';
 import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
-import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
+import 'package:flutter_windows/model/game/GameDataController.dart';
 import 'package:flutter_windows/model/hint/HintDataHandler.dart';
 import 'package:flutter_windows/model/room/GameDataHandler.dart';
 import 'package:flutter_windows/model/stage/StageDataHandler.dart';
@@ -17,7 +19,6 @@ class DataHandler extends ModbusObserver{
   final StageDataHandler stageDataHandler;
   final GameDataHandler gameDataHandler;
   final HintDataHandler hintDataHandler;
-  final GameControlDataHandler gameControlDataHandler;
 
   final String roomID;
 
@@ -29,8 +30,18 @@ class DataHandler extends ModbusObserver{
     required this.stageDataHandler,
     required this.gameDataHandler,
     required this.hintDataHandler,
-    required this.gameControlDataHandler,
   });
+
+  // Send Commands - These are typically one-shot type and should reset after 1x scan time
+  void sendCommand(int address, bool state) {
+    var connectionMap = mbHandler.connectionMap;
+    String ipAddress = gameDataHandler.getGame().ip;
+    connectionMap[ipAddress]!.write(address, state);
+    // Wait for a full scan rate - then invert
+    Timer(Duration(milliseconds: mbHandler.pollRate), (){
+      connectionMap[ipAddress]!.write(address, !state);
+    });
+  }
 
 /// Obtained via Modbus Communication
 /// - Alerts

@@ -1,12 +1,13 @@
 
 
 enum GameState{
-  Ongoing,
+  Running,
   Ready,
   Resetting,
   RequireReset,
   Finished,
   Disconnected,
+  Standby,
 }
 
 class GameData{
@@ -26,6 +27,12 @@ class GameData{
   late bool isAudioPlaying;
   late bool isVideoPlaying;
 
+  // Interlocks
+  late bool gameReady, gameFinished, gameStandby;
+  late bool equipmentReady, equipmentHealthy;
+  late bool stagesReady, stagesHealthy;
+  late bool powerReady;
+
   GameData({required this.name, required this.id, required this.ip, required this.maxTime,
   }) {
     this.state = GameState.Disconnected;
@@ -40,12 +47,33 @@ class GameData{
 
     isAudioPlaying = false;
     isVideoPlaying = false;
+
+    gameReady = false;
+    equipmentReady = false;
+    stagesReady = false;
+    powerReady = false;
+
+    equipmentHealthy = false;
+    stagesHealthy = false;
+    gameFinished = false;
+    gameStandby = false;
+  }
+
+  void updateState() {
+    if(running) state = GameState.Running;
+    if(gameReady) state = GameState.Ready;
+    if(false) state = GameState.Resetting;
+    if(false) state = GameState.RequireReset;
+    if(gameFinished) state = GameState.Finished;
+    if(gameStandby) state = GameState.Standby;
+    checkState();
   }
 
   void checkState() {
+
     switch(state){
-      case GameState.Ongoing:
-        this.stateText = "Ongoing";
+      case GameState.Running:
+        this.stateText = "Running";
         break;
       case GameState.Ready:
         this.stateText = "Ready";
@@ -61,6 +89,9 @@ class GameData{
         break;
       case GameState.Disconnected:
         this.stateText = "Disconnected";
+        break;
+      case GameState.Standby:
+        this.stateText = "Standby";
         break;
     }
   }

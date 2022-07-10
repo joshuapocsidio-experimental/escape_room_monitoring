@@ -12,10 +12,6 @@ class RoomOverviewStageBlock extends StatefulWidget {
 }
 
 class _RoomOverviewStageBlockState extends State<RoomOverviewStageBlock> {
-  List<Widget> cards = [
-
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Padding(

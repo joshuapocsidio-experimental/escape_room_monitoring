@@ -1,6 +1,6 @@
 import 'package:flutter_windows/model/alert/AlertData.dart';
 
-import '../../../model/alert/AlertDataHandler.dart';
+import '../../../../model/alert/AlertDataHandler.dart';
 
 class FlightAlertDataHandler extends AlertDataHandler{
   // Data Flags

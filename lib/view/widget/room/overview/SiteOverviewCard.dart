@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_windows/model/DataHandler.dart';
 import 'package:flutter_windows/model/room/GameDataHandler.dart';
 import 'package:flutter_windows/view/screen/MainScreen.dart';
+import 'package:flutter_windows/view/screen/page/SitePage.dart';
 import 'package:provider/provider.dart';
 
 import '../../utility/GameProgressBar.dart';
@@ -10,10 +11,6 @@ import '../../utility/TimerProgressBar.dart';
 import 'SiteOverviewGridView.dart';
 
 class SiteOverviewCard extends StatefulWidget {
-  final DataHandler dataHandler;
-
-  SiteOverviewCard({required this.dataHandler});
-
   @override
   _SiteOverviewCardState createState() => _SiteOverviewCardState();
 }
@@ -48,10 +45,19 @@ class _SiteOverviewCardState extends State<SiteOverviewCard> {
       print("RUNNING FEEDBACK");
     });
   }
+
+  @override
+  void dispose() {
+    _gameDataHandler.removeCallback(_refreshInfo);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     NavigationHandler navHandler = Provider.of<NavigationHandler>(context);
-    _gameDataHandler = widget.dataHandler.gameDataHandler;
+    DataHandler dataHandler = SitePage.of(context).dataHandler;
+
+    _gameDataHandler = dataHandler.gameDataHandler;
     _gameDataHandler.addCallback(_refreshInfo);
     return Card(
       backgroundColor: Colors.white,
@@ -59,49 +65,47 @@ class _SiteOverviewCardState extends State<SiteOverviewCard> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            child: ListTile(
-              isThreeLine: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 4),
-              title: Expanded(
-                child: Center(
-                  child: Text(
-                    _gameDataHandler.getGame().name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+          ListTile(
+            isThreeLine: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 4),
+            title: Expanded(
+              child: Center(
+                child: Text(
+                  _gameDataHandler.getGame().name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              trailing: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(FluentIcons.room),
-                    onPressed: (){
-                      showDialog(
-                        context: context,
-                        builder: (context){
-                          return ContentDialog(
-                            title: Text("Navigate to '${_gameDataHandler.getGame().name}'"),
-                            content: Text("Please confirm you would like to navigate to '${_gameDataHandler.getGame().name}' page?"),
-                            actions: [
-                              Button(child: const Text("Confirm"), onPressed: (){
-                                Navigator.pop(context);
-                                navHandler.navigate(_gameDataHandler.getGame().id);
-                              }),
-                              Button(child: const Text("Cancel"), onPressed: (){Navigator.pop(context);}),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  IconButton(icon: const Icon(FluentIcons.ringer), onPressed: (){},),
-                  IconButton(icon: const Icon(FluentIcons.more), onPressed: (){},),
-                ],
-              ),
+            ),
+            trailing: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(FluentIcons.room),
+                  onPressed: (){
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return ContentDialog(
+                          title: Text("Navigate to '${_gameDataHandler.getGame().name}'"),
+                          content: Text("Please confirm you would like to navigate to '${_gameDataHandler.getGame().name}' page?"),
+                          actions: [
+                            Button(child: const Text("Confirm"), onPressed: (){
+                              Navigator.pop(context);
+                              navHandler.navigate(_gameDataHandler.getGame().id);
+                            }),
+                            Button(child: const Text("Cancel"), onPressed: (){Navigator.pop(context);}),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                IconButton(icon: const Icon(FluentIcons.ringer), onPressed: (){},),
+                IconButton(icon: const Icon(FluentIcons.more), onPressed: (){},),
+              ],
             ),
           ),
           const Padding(
@@ -130,9 +134,15 @@ class _SiteOverviewCardState extends State<SiteOverviewCard> {
                 Expanded(
                   flex: 16,
                   child: Text(
-                    _gameDataHandler.getGame().running == true ? "Running" : "Standby",
+                    _gameDataHandler.getGame().running == true ? "Running"
+                        : _gameDataHandler.getGame().gameReady == true ? "Ready"
+                        : "Not Ready"
+                    ,
                     style: TextStyle(
-                      color: _gameDataHandler.getGame().running == true ? Colors.blue : Colors.black,
+                      color: _gameDataHandler.getGame().running == true ? Colors.blue
+                          : _gameDataHandler.getGame().gameReady == true ? Colors.orange
+                          : Colors.red
+                      ,
                       fontSize: 15,
                     ),
                   ),
@@ -151,7 +161,7 @@ class _SiteOverviewCardState extends State<SiteOverviewCard> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: GameProgressBar(),
+            child: GameProgressBar(progress: _gameDataHandler.getGame().progress),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -279,8 +289,8 @@ class _SiteOverviewCardState extends State<SiteOverviewCard> {
               child: SiteOverviewGridView(
                 toggle: _isChecked,
                 numColumns: _numColumns!,
-                equipmentDataHandler: widget.dataHandler.equipmentDataHandler,
-                stageDataHandler: widget.dataHandler.stageDataHandler,
+                equipmentDataHandler: dataHandler.equipmentDataHandler,
+                stageDataHandler: dataHandler.stageDataHandler,
               ),
             ),
           ),

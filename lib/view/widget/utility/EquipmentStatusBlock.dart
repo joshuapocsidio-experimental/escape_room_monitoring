@@ -1,18 +1,18 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class RoomOverviewEquipmentCard extends StatefulWidget {
+class StageStatusBlock extends StatefulWidget {
   late Color? color;
   late String? label;
   late String? tooltip;
   late String? subLabel;
 
-  RoomOverviewEquipmentCard({this.color, this.label, this.tooltip, this.subLabel});
+  StageStatusBlock({this.color, this.label, this.tooltip, this.subLabel});
 
   @override
-  _RoomOverviewEquipmentCardState createState() => _RoomOverviewEquipmentCardState();
+  _StageStatusBlockState createState() => _StageStatusBlockState();
 }
 
-class _RoomOverviewEquipmentCardState extends State<RoomOverviewEquipmentCard> {
+class _StageStatusBlockState extends State<StageStatusBlock> {
   List<Widget> cards = [
 
   ];

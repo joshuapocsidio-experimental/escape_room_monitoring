@@ -39,7 +39,7 @@ class _RoomAlertCardState extends State<RoomAlertCard> {
                 label: Text('Acknowledge'),
                 icon: Icon(FluentIcons.check_mark),
                 onPressed: () async {
-                  dataHandler.mbHandler.sendCommand('10.0.0.23', 0);
+                  dataHandler.sendCommand(10, true);
                   dataHandler.alertDataHandler.acknowledgeAll();
                 },
               ),

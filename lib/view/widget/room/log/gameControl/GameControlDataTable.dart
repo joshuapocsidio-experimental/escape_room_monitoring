@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_windows/model/game/GameControlData.dart';
-import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
+import 'package:flutter_windows/model/game/GameDataController.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -12,7 +12,7 @@ class GameControlDataTable extends StatefulWidget {
 }
 
 class _GameControlDataTableState extends State<GameControlDataTable> {
-  late GameControlDataHandler gameControlDataHandler;
+  late GameDataController gameController;
   late GameControlDataSource _gameControlDataSource;
   late ScrollController _scrollController;
   final DataGridController _dataGridController = DataGridController();
@@ -25,15 +25,22 @@ class _GameControlDataTableState extends State<GameControlDataTable> {
 
   void _refreshTable(){
     setState(() {
-      gameControlDataHandler.updateLogs();
+      gameController.updateLogs();
     });
   }
 
   @override
+  void dispose() {
+    gameController.removeCallback(_refreshTable);
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    gameControlDataHandler = RoomPage.of(context).dataHandler.gameControlDataHandler;
-    _gameControlDataSource = gameControlDataHandler.gameControlDataSource;
-    gameControlDataHandler.addCallback(_refreshTable);
+    gameController = RoomPage.of(context).dataControllerManager.gameDataController;
+    _gameControlDataSource = gameController.gameControlDataSource;
+    gameController.addCallback(_refreshTable);
+    // Make sure to refresh ever time widget is built
+    _refreshTable();
     return SfDataGridTheme(
       data: SfDataGridThemeData(
         sortIcon: const Icon(

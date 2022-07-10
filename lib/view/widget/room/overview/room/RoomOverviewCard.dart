@@ -1,8 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_windows/model/game/GameDataController.dart';
 import 'package:flutter_windows/model/room/GameData.dart';
 import 'package:flutter_windows/model/room/GameDataHandler.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
+import 'package:flutter_windows/view/widget/room/overview/room/RoomInterlockStatusTile.dart';
+import 'package:flutter_windows/view/widget/room/overview/room/RoomInterlockView.dart';
 
 import '../../../utility/GameControlCommandBar.dart';
 import '../../../utility/GameProgressBar.dart';
@@ -19,6 +22,7 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
   late GameState gameState;
   late String timeString;
   late GameDataHandler _gameDataHandler;
+  late GameDataController _gameController;
 
   @override
   void initState() {
@@ -41,10 +45,11 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
   Widget build(BuildContext context) {
     _gameDataHandler = RoomPage.of(context).dataHandler.gameDataHandler;
     _gameDataHandler.addCallback(_refreshOverview);
+
+    _gameController = RoomPage.of(context).dataControllerManager.gameDataController;
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
@@ -110,9 +115,16 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
                 Expanded(
                   flex: 16,
                   child: Text(
-                    _gameDataHandler.getGame().running == true ? "Running" : "Standby",
+                    _gameDataHandler.getGame().stateText,
                     style: TextStyle(
-                      color: _gameDataHandler.getGame().running == true ? Colors.blue : Colors.black,
+                      color: _gameDataHandler.getGame().state == GameState.Running ? Colors.blue
+                          : _gameDataHandler.getGame().state == GameState.Ready ? Colors.yellow
+                          : _gameDataHandler.getGame().state == GameState.RequireReset ? Colors.orange
+                          : _gameDataHandler.getGame().state == GameState.Finished ? Colors.green
+                          : _gameDataHandler.getGame().state == GameState.Standby ? Colors.magenta
+                          : _gameDataHandler.getGame().state == GameState.Disconnected ? Colors.magenta
+                          : Colors.red
+                      ,
                       fontSize: 15,
                     ),
                   ),
@@ -131,7 +143,7 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: GameProgressBar(),
+            child: GameProgressBar(progress: _gameDataHandler.getGame().progress),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -155,12 +167,17 @@ class _RoomOverviewCardState extends State<RoomOverviewCard> {
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Divider(),
           ),
-          GameControlCommandBar(),
+          GameControlCommandBar(gameController: _gameController),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Divider(),
           ),
-          TimerControlCommandBar(),
+          TimerControlCommandBar(gameController: _gameController),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Divider(),
+          ),
+          RoomInterlockView(),
         ],
       )
     );

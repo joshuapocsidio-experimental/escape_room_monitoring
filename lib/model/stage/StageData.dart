@@ -35,7 +35,7 @@ class StageData extends DataNotifier{
   final String name;
   final String description;
   late StageState state;
-  late bool isCompleted, isBypassed, inProgress;
+  late bool isCompleted, isBypassed, inProgress, isFaulted;
 
   late String stateText;
 
@@ -66,12 +66,14 @@ class StageData extends DataNotifier{
     isCompleted = false;
     isBypassed = false;
     inProgress = false;
+    isFaulted = false;
   }
 
-  void updateState({required bool isCompleted, required bool inProgress, required bool isBypassed}) {
+  void updateState({required bool isCompleted, required bool inProgress, required bool isBypassed, required bool isFaulted}) {
     this.isBypassed = isBypassed;
     this.inProgress = inProgress;
     this.isCompleted = isCompleted;
+    this.isFaulted = isFaulted;
     // Does not involve puzzles that aren't monitored as they are not to be updated during game
     if(state == StageState.NotMonitored){
       return;

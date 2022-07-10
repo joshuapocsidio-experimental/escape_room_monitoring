@@ -103,8 +103,9 @@ class _MainScreenState extends State<MainScreen> {
       // navigationWidgets.add(InvalidRoomTabularPage(roomName: "Flight 729 Escape Room"));
       navigationWidgets.add(
         RoomPage(
-            dataHandler: dataMaster.getDataHandler('flrm01'),
-            child: FlightRoomPage(roomID: flightGameData.id, roomName: flightGameData.name, maxTime: flightGameData.maxTime),
+          dataControllerManager: dataMaster.getDataControllerManager('flrm01'),
+          dataHandler: dataMaster.getDataHandler('flrm01'),
+          child: FlightRoomPage(roomID: flightGameData.id, roomName: flightGameData.name, maxTime: flightGameData.maxTime),
         ),
       );
     }

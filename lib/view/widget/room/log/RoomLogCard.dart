@@ -1,6 +1,6 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_windows/model/game/GameControlDataHandler.dart';
+import 'package:flutter_windows/model/game/GameDataController.dart';
 import 'package:flutter_windows/view/screen/page/RoomPage.dart';
 import 'package:flutter_windows/view/widget/room/hint/RoomHintCard.dart';
 import 'package:flutter_windows/view/widget/room/log/gameControl/GameControlLogCard.dart';
@@ -12,7 +12,7 @@ class RoomLogCard extends StatefulWidget {
 }
 
 class _RoomLogCardState extends State<RoomLogCard> {
-  late GameControlDataHandler gameControlDataHandler;
+  late GameDataController gameController;
 
   int _controlTabIndex = 0;
   void updateControlTabIndex(int index) {
@@ -23,7 +23,7 @@ class _RoomLogCardState extends State<RoomLogCard> {
 
   @override
   Widget build(BuildContext context) {
-    gameControlDataHandler = RoomPage.of(context).dataHandler.gameControlDataHandler;
+    gameController = RoomPage.of(context).dataControllerManager.gameDataController;
     return TabView(
       closeButtonVisibility: CloseButtonVisibilityMode.never,
       onChanged: updateControlTabIndex,

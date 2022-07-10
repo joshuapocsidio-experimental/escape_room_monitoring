@@ -4,8 +4,8 @@ import 'package:flutter_windows/model/equipment/EquipmentDataHandler.dart';
 import 'package:flutter_windows/model/stage/StageData.dart';
 import 'package:flutter_windows/model/stage/StageDataHandler.dart';
 
-import 'room/RoomOverviewEquipmentCard.dart';
-import 'room/RoomOverviewStageBlock.dart';
+import '../../utility/EquipmentStatusBlock.dart';
+import '../../utility/StageStatusBlock.dart';
 
 class SiteOverviewGridView extends StatefulWidget {
   late bool toggle;
@@ -74,7 +74,7 @@ class _SiteOverviewGridViewState extends State<SiteOverviewGridView> {
               }
               else {
                 EquipmentData equipmentData = _equipmentStateData[index];
-                gridBlock = RoomOverviewEquipmentCard(color: EquipmentStatusContainerColorMap[equipmentData.stateText], label: equipmentData.equipReference, subLabel: equipmentData.reference,);
+                gridBlock = StageStatusBlock(color: EquipmentStatusContainerColorMap[equipmentData.stateText], label: equipmentData.equipReference, subLabel: equipmentData.reference,);
               }
               return Container(child: gridBlock);
             },
