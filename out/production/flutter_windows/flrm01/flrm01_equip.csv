@@ -1,0 +1,20 @@
+equipRef, equipName, description, onText, offText, ref
+A, Intro Pushbutton, Plays the introduction video, Pressed, Not Pressed, 01
+B, Multi-Notch Controller, Activates manual override, Activated, Deactivated, 04
+C, Multiple Rotary Switches, Activates system override, Activated, Deactivated, 05
+D, Keypad Electromagnet, Holds the keypad door closed, Disengaged, Engaged, 05
+E, Keypad Door Sensor, Detects if keypad door is opened, Activated, Deactivated, 05
+F, Overhead Cabinet Electromagnet, Holds the overhead cabinet door closed, Disengaged, Engaged, 06
+G, Overhead Cabinet Door Sensor, Detects if overhead cabinet door is open or closed, Open, Closed, 06
+H, Test Tube Switch, Activates the hydraulic to lower the test tube table, Activated, Deactivated, 09
+I, Test Tube Linear Actuator, Lowers the test tube table, Activated, Deactivated, 09
+J, Test Tube Limit Switch A, Detects if test tube table has been lowered, Activated, Deactivated, 09
+K, Test Tube Limit Switch B, Detects if test tube table has reached its physical limit, Activated, Deactivated, 09
+L, Antidote Electromagnet, Holds the antidote enclosure door closed, Disengaged, Engaged, 09
+M, Antidote Door Sensor, Detects if antidote door is open or closed, Open, Closed, 09
+N, Lever Door Electromagnet, Holds the lever enclosure door closed, Disengaged, Engaged, 09
+O, Lever Door Sensor, Detects if lever door is open or closed, Open, Closed, 09
+P, Emergency Lever, Activates emergency state, Activated, Deactivated, 11
+Q, Emergency Lighting, Emergency lighting activated and flashes red, Activated, Deactivated, 11
+R, Exit Door Electromagnet, Holds the entry/exit door closed, Disengaged, Engaged, 11
+S, Exit Door Sensor, Detects if entry/exit door is closed, Open, Closed, 11

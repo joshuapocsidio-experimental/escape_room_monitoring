@@ -1,0 +1,24 @@
+id,type,title,description,ref
+1,alm,12V Supply Fault,Power supply fault detected,-, FLRM01_12VRly_Flt_A, %QX1050.0, BOOL, FLRM01 12VDC Power Supply Relay Fault
+2,alm,24V Supply Fault,Power supply fault detected,-, FLRM01_24VRly_Flt_A, %QX1050.1, BOOL, FLRM01 24VDC Power SUpply Relay Fault
+3,alm,I/O Raspberry Pi Comms Fault,Communications to I/O Raspberry Pi has been lost,-
+4,alm,Keyboard Raspberry Pi Comms Fault,Communications to keyboard Raspberry Pi has been lost, RPI01
+5,alm,Keypad Raspberry Pi Comms Fault,Communications to keypad Raspberry Pi has been lost, RPI02
+6,alm,Keypad Door Fault 1,Detected open door but electromagnet is still engaged, Equip E-D
+7,alm,Overhead Cabinet Fault 1,Detected open door but electromagnet is still engaged, Equip F-G
+8,alm,Antidote Door Fault 1,Detected open door but electromagnet is still engaged, Equip L-M
+9,alm,Lever Door Fault 1,Detected open door but electromagnet is still engaged, Equip N-O
+10,alm,Exit Door Fault 1,Detected open door but electromagnet is still engaged, Equip R-S
+11,alm,Test Tube Table Limit Switch Fault 1,End of travel limit switch activated but indicator limit switch inactive, Equip J-K
+12,alm,Overhead Cabinet Fault 2 ,Electromagnet disengaged but door still detected as closed, Equip F-G
+13,inf,Progress : 25%,Progress at 25%, -
+14,inf,Progress : 50%,Progress at 50%, -
+15,inf,Progress : 75%,Progress at 75%, -
+16,att,Progress : 90%,Progress at 90%, -
+17,att,Progress : Game Completed,Game completed, -
+18,att,Hint Request,Players have requested for a hint, -
+19,att,Assistance Request,Players have requested for a non-game related assistance, -
+20,alm,Stage 6 Sequence Error, Keypad attempts detected but system override stage has not been completed nor bypassed, Stage 06
+21,alm,Stage 8 Sequence Error, Chubby has been entered but keypad stage has not been completed nor bypassed, Stage 08
+22,alm,Stage 9 Sequence Error, Linear actuator is being activated but PC Login has not been completed nor bypassed, Stage 09
+23,alm,Stage 11 Sequence Error, Emergency lever has been activated but Test Tube stage has not been completed nor bypassed, Stage 11

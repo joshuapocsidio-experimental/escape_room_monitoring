@@ -1,0 +1,12 @@
+id, title, description, typeString
+2.1, Dog Tag Hint, Audio hint to use magnetic dog tag and look for a dark crevasse for a hidden key, Audio
+3.1, Gun Box Hint, Audio hint to pay attention to the hints along the gun props to retrieve the lock code, Audio
+4.1, Manual Override Hint, Audio hint to guide players to manual sheet and match with the sliding notches accordingly, Audio
+5.1, System Override Hint, Audio hint to guide players to turn rotary switches to correct positions via clue (idk), Audio
+6.1, Keypad Code #1 Hint, Audio hint to guide players to correct combination for code #1, Audio
+6.2, Keypad Code #2 Hint, Audio hint to guide players to correct combination for code #2, Audio
+7.1, Infrared Frame Hint, Audio hint to inform players of the special capabilities of the camera and look for specific frame for some tech magic, Audio
+8.1, PC Login Hint, Audio hint to remind players of using the keywords mentioned in the audio playback from keypad code #2, Audio
+9.1, Test Tube Hint, Some hint for test tube table, Audio
+10.1, Bravo Lock Hint, Some hint for BRAVO code, Audio
+11.1, Emergency Hint, Audio hint to tell players to pull the emergency lever and get the f out, Audio

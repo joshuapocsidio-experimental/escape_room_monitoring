@@ -1,0 +1,12 @@
+ref,name,description,monitored
+01,Intro,Introduction Video, yes
+02,Hidden Key,Hidden Key to be obtained via magnetic dog tag, no
+03,Gun Box Lock, Solved by entering numeric code obtained via hints along the gun props, no
+04,Manual Override,Solved by sliding notches to correct positions obtained via manual override sheet, yes
+05,System Override,Solved by twisting rotary switches to correct positions, yes
+06,Keypad Stage,Solved via entering numeric codes obtained from manual override sheet and map coordinates, yes
+07,Infrared Frame Clue,Obtain clue via usage of infrared camera pointed at picture frame, no
+08,PC Login Password,Solved by inputting 'chubby' as password to the login screen, yes
+09,Test Tube Antidote,Solved by pushing down correct test tubes to corresponding slots, yes
+10,Bravo Lock,Solved by inputting BRAVO to the lock, no
+11,Emergency Stage,Activated by pulling down lever, yes
