@@ -1,4 +1,4 @@
-# flutter_windows
+# Escape Room Monitoring
 
 flutter_windows is a current project under development for building an escape room's SCADA system.
 
